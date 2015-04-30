@@ -9,14 +9,8 @@ A Material Design App which can help you check the latest status of express pack
 
 ### The logs of wearable edition 手表应用开发日志（然而并没有什么卵用）
 
-2015/4/19:
-我尝试用 Android Wear 模拟器去开发，但是它在我电脑上慢得不行而且有时候会卡在安装 APK 包那，最后我还是放弃了。
-也许我需要一个真正的 Android Wear 设备，但我是个穷屌学森买不起啊QAQ~
-如果某个壕乐意送我一个 Moto 360 或者别的 Android Wear 设备，我会非常开心并且快速地将它开发出来。
-
-(I attempted to develop it with Android Wear Emulator, and I found it too slow for my computer and that sometimes it would be trapped when installing apk so I gave up finally.
-Maybe I need a real Android Wear device, but I couldn't afford it QAQ~
-If someone which is very rich is willing to buy me a Moto 360 or another Android Wear Devices, I'll very happy and complete it quickly.)
+2015/4/30:
+Moto 360 已入, 不知道什么时候会完成
 
 ### Finished list 已完成
 
