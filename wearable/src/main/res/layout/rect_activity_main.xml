@@ -7,9 +7,21 @@
               tools:context=".MainActivity"
               tools:deviceIds="wear_square">
 
-	<TextView
-		android:id="@+id/text"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="@string/hello_square"/>
+	<android.support.v4.widget.SwipeRefreshLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:id="@+id/swipe_refresh_layout">
+
+		<android.support.wearable.view.WearableListView
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:id="@+id/list_view"
+			android:paddingLeft="16dp"
+			android:paddingRight="16dp"
+			android:paddingTop="8dp"
+			android:paddingBottom="8dp"
+			android:clipToPadding="false"/>
+
+	</android.support.v4.widget.SwipeRefreshLayout>
+
 </LinearLayout>

@@ -1,1 +1,1 @@
-include ':app', ':libraries:SwipeBackLayout', ':libraries:PersistentSearch', ':port'
+include ':app', ':libraries:SwipeBackLayout', ':libraries:PersistentSearch', ':port', ':wearable'

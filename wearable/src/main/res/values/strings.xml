@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">ExpressHelper</string>
-    <string name="hello_round">Hello Round World!</string>
-    <string name="hello_square">Hello Square World!</string>
+
+	<string name="content_null">No data</string>
 
 </resources>

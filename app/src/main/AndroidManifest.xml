@@ -69,7 +69,12 @@
 			    <action android:name="info.papdt.express.helper.ACTION_ADD_TRACK" />
 		    </intent-filter>
 	    </receiver>
-		
+
+	    <service android:name=".support.wearable.RefreshListener">
+		    <intent-filter>
+			    <action android:name="com.google.android.gms.wearable.BIND_LISTENER"/>
+		    </intent-filter>
+	    </service>
     </application>
 
 </manifest>
