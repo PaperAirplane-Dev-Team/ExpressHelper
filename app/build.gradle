@@ -9,6 +9,7 @@ android {
         targetSdkVersion 21
         versionCode 14
         versionName "1.1.2"
+	    resConfigs "en", "zh_cn", "zh_tw"
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -16,7 +17,8 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+	        shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

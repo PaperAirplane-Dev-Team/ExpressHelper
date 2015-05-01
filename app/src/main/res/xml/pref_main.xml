@@ -8,8 +8,8 @@
 		                  android:title="@string/item_disable_animation"
 		                  android:summary="@string/item_disable_animation_desc"/>
 		<SwitchPreference android:key="navigation_tint"
-		                  android:title=""
-		                  android:summary=""/>
+		                  android:title="@string/item_navigation_tint"
+		                  android:summary="@string/item_navigation_tint_desc"/>
 
 	</PreferenceCategory>
 

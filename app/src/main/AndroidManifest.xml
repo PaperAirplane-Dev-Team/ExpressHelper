@@ -69,16 +69,7 @@
 			    <action android:name="info.papdt.express.helper.ACTION_ADD_TRACK" />
 		    </intent-filter>
 	    </receiver>
-
-        <activity
-            android:name="info.papdt.express.helper.ui.TestActivity"
-            android:label="@string/title_activity_test"
-            android:theme="@style/AppTheme.NoActionBar.Translucent" >
-	        <intent-filter>
-		        <action android:name="android.intent.action.MAIN" />
-	        </intent-filter>
-        </activity>
-
+		
     </application>
 
 </manifest>

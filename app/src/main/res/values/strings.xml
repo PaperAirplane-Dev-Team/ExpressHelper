@@ -177,7 +177,7 @@
     <string name="action_phone">Phone</string>
     <string name="action_website">Open website</string>
     <string name="toast_phone_is_not_exist">Sorry, we haven\'t known the phone number of this company.</string>
-	<string name="toast_mic_unsupported">Sorry, you haven't installed Mokee Voice Assist.</string>
+	<string name="toast_mic_unsupported">Sorry, you haven\'t installed Mokee Voice Assist.</string>
     <string name="notification_delivered">" has been delivered."</string>
     <string name="notification_on_the_way">" is on the way."</string>
     <string name="notification_new_message">" has a new message."</string>
