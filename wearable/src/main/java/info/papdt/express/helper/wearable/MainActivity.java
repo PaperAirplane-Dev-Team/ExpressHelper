@@ -1,13 +1,12 @@
 package info.papdt.express.helper.wearable;
 
 import android.app.Activity;
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.wearable.view.WatchViewStub;
 import android.support.wearable.view.WearableListView;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -41,6 +40,7 @@ public class MainActivity extends Activity
 	private WatchViewStub mViewStub;
 	private WearableListView mListView;
 	private SwipeRefreshLayout mSwipeRefreshLayout;
+	private TextView mDebugText;
 
 	private ExpressDatabase mDatabase;
 	private HomeWearableListAdapter mAdapter;
@@ -71,6 +71,7 @@ public class MainActivity extends Activity
 	@Override
 	public void onLayoutInflated(WatchViewStub watchViewStub) {
 		mAdapter = new HomeWearableListAdapter(mDatabase);
+		mDebugText = (TextView) findViewById(R.id.debug_text);
 		mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 		mListView = (WearableListView) findViewById(R.id.list_view);
 		mListView.setAdapter(mAdapter);
@@ -80,19 +81,30 @@ public class MainActivity extends Activity
 			public void onRefresh() {
 				if (!isRefreshing) {
 					Log.i(TAG, "onRefresh!");
+					addDebugText("onRefresh!");
 					isRefreshing = true;
 					mSwipeRefreshLayout.setRefreshing(true);
 					if (mGoogleApiClient.isConnected()) {
+						Log.i(TAG, "send");
+						addDebugText("send");
 						PutDataMapRequest requestMap = PutDataMapRequest.create(Constants.PATH);
 						requestMap.getDataMap().putString(Constants.EXTRA_EH_ACTION, Constants.EH_ACTION_REFRESH);
 						requestMap.getDataMap().putBoolean(Constants.EXTRA_REFRESH_FROM_NETWORK, false);
+						requestMap.getDataMap().putLong("timestamp", System.currentTimeMillis());
 						PutDataRequest request = requestMap.asPutDataRequest();
+						if (!mGoogleApiClient.isConnected()) {
+							return;
+						}
 						Wearable.DataApi.putDataItem(mGoogleApiClient, request)
 								.setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
 									@Override
 									public void onResult(DataApi.DataItemResult dataItemResult) {
 										if (!dataItemResult.getStatus().isSuccess()) {
 											Log.e(TAG, "onResult: The status isn't success. Code:" + dataItemResult.getStatus());
+											addDebugText("onResult: The status isn't success. Code:" + dataItemResult.getStatus());
+										} else {
+											Log.e(TAG, "onResult: Succeed");
+											addDebugText("onResult: Succeed");
 										}
 									}
 								});
@@ -100,6 +112,10 @@ public class MainActivity extends Activity
 				}
 			}
 		});
+	}
+
+	private void addDebugText(String line) {
+		mDebugText.setText(line + "\n" + mDebugText.getText());
 	}
 
 	@Override
@@ -117,12 +133,15 @@ public class MainActivity extends Activity
 
 	@Override
 	public void onDataChanged(DataEventBuffer dataEvents) {
+		Log.i(TAG, "onDataChanged");
+		addDebugText("onDataChanged");
 		for (DataEvent event : dataEvents) {
 			if (event.getType() == DataEvent.TYPE_CHANGED) {
 				DataMap dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
 				String action = dataMap.getString(Constants.EXTRA_EH_ACTION);
 				if (action.equals(Constants.EH_ACTION_CLEAR)) {
 					Log.i(TAG, "Received ACTION_CLEAR");
+					addDebugText("Received ACTION_CLEAR");
 					mDatabase.clear();
 					try {
 						mDatabase.save();
@@ -136,6 +155,7 @@ public class MainActivity extends Activity
 				}
 				if (action.equals(Constants.EH_ACTION_ADD)) {
 					Log.i(TAG, "Received ACTION_ADD");
+					addDebugText("Received ACTION_ADD");
 					String data = dataMap.getString(Constants.EH_KEY_DATA);
 					try {
 						JSONObject jsonObject = new JSONObject(data);
@@ -158,11 +178,12 @@ public class MainActivity extends Activity
 
 	@Override
 	public void onConnected(Bundle bundle) {
+		addDebugText("onConnected!");
 		Wearable.DataApi.addListener(mGoogleApiClient, this);
 	}
 
 	@Override
-	protected void onResume() {
+	protected void onStart() {
 		super.onStart();
 		mGoogleApiClient.connect();
 	}
@@ -170,7 +191,6 @@ public class MainActivity extends Activity
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Wearable.DataApi.removeListener(mGoogleApiClient, this);
 		mGoogleApiClient.disconnect();
 	}
 

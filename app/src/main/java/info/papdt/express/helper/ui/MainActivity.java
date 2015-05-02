@@ -1,5 +1,6 @@
 package info.papdt.express.helper.ui;
 
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -40,6 +41,8 @@ import info.papdt.express.helper.dao.ExpressDatabase;
 import info.papdt.express.helper.support.CrashHandler;
 import info.papdt.express.helper.support.Settings;
 import info.papdt.express.helper.support.Utility;
+import info.papdt.express.helper.support.wearable.Constants;
+import info.papdt.express.helper.support.wearable.RefreshListener;
 import info.papdt.express.helper.ui.adapter.CompanyListRecyclerAdapter;
 import info.papdt.express.helper.ui.adapter.HomePagerAdapter;
 import info.papdt.express.helper.ui.common.MyRecyclerViewAdapter;
@@ -89,6 +92,9 @@ public class MainActivity extends AbsActivity implements ObservableScrollViewCal
 		mPager.setAdapter(mPagerAdapter);
 		mPager.setCurrentItem(selectedTab, false);
 		mSlidingTab.setViewPager(mPager);
+
+		Intent intent = new Intent(this, RefreshListener.class);
+		startService(intent);
 	}
 
 	@Override
@@ -474,7 +480,16 @@ public class MainActivity extends AbsActivity implements ObservableScrollViewCal
 			return true;
 		}
 		if (id == R.id.action_add) {
-			AddActivity.launch(MainActivity.this, mFAB);
+			Intent intent = new Intent(this, RefreshListener.class);
+			intent.setAction(Constants.ACTION_REFRESH);
+			try {
+				PendingIntent
+						.getService(getApplicationContext(), 1000, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+						.send();
+			} catch (PendingIntent.CanceledException e) {
+				e.printStackTrace();
+			}
+			// AddActivity.launch(MainActivity.this, mFAB);
 			return true;
 		}
 		if (id == R.id.action_manual_refresh) {

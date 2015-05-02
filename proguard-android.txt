@@ -1,1 +1,2 @@
--keep class info.papdt.express.helper.ui.*
+-keep class info.papdt.express.helper.ui.**
+-keep class android.support.**

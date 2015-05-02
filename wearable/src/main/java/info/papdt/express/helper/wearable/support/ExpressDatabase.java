@@ -109,7 +109,6 @@ public class ExpressDatabase {
 		} catch (IOException e) {
 			jsonData = "{\"data\":[]}";
 			Log.i(TAG, "文件不存在,初始化新的文件.");
-			e.printStackTrace();
 		}
 		Log.i(TAG, "读入json数据结果:");
 		Log.i(TAG, jsonData);

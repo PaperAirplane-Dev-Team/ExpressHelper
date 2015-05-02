@@ -34,6 +34,7 @@ public class DataUpdateService extends WearableListenerService
 
 	@Override
 	public void onCreate() {
+		Log.i(TAG, "onStart");
 		super.onCreate();
 		mGoogleApiClient = new GoogleApiClient.Builder(this)
 				.addApi(Wearable.API)
@@ -71,6 +72,7 @@ public class DataUpdateService extends WearableListenerService
 
 	@Override
 	public void onDataChanged(DataEventBuffer dataEvents) {
+		Log.i(TAG, "onDataChanged");
 		for (DataEvent event : dataEvents) {
 			if (event.getType() == DataEvent.TYPE_CHANGED) {
 				DataMap dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();

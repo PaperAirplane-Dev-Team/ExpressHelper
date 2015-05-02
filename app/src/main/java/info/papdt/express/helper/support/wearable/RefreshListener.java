@@ -1,5 +1,6 @@
 package info.papdt.express.helper.support.wearable;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +15,8 @@ import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
+
+import java.util.concurrent.TimeUnit;
 
 import info.papdt.express.helper.dao.ExpressDatabase;
 
@@ -33,21 +36,27 @@ public class RefreshListener extends WearableListenerService
 				.addConnectionCallbacks(this)
 				.addOnConnectionFailedListener(this)
 				.build();
+		mGoogleApiClient.connect();
+	}
+
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		if (intent != null) {
+			if (Constants.ACTION_REFRESH.equals(intent.getAction())) {
+				Log.i(TAG, "onStartCommand ACTION_REFRESH");
+				sendAllData();
+			}
+		}
+		return super.onStartCommand(intent, flags, startId);
 	}
 
 	@Override
 	public void onDataChanged(DataEventBuffer dataEvents) {
+		Log.i(TAG, "onDataChanged");
 		for (DataEvent event : dataEvents) {
 			if (event.getType() == DataEvent.TYPE_CHANGED) {
 				if (Constants.EH_ACTION_REFRESH.equals(event.getDataItem().getUri().getPath())) {
-					Log.i(TAG, "Received ACTION_REFRESH");
-					sendDataClear();
-
-					ExpressDatabase database = ExpressDatabase.getInstance(getApplicationContext());
-					for (int i = 0; i < database.size(); i++) {
-						Log.i(TAG, "sending " + i + "....");
-						sendDataAdd(database.getExpress(i).getDataStr());
-					}
+					sendAllData();
 				}
 			}
 		}
@@ -73,35 +82,51 @@ public class RefreshListener extends WearableListenerService
 
 	}
 
+	private void sendAllData() {
+		new Thread() {
+			@Override
+			public void run() {
+				ConnectionResult connectionResult =
+						mGoogleApiClient.blockingConnect(30, TimeUnit.SECONDS);
+
+				if (!connectionResult.isSuccess()) {
+					Log.e(TAG, "Failed to connect to GoogleApiClient.");
+					return;
+				}
+
+				Log.i(TAG, "Received ACTION_REFRESH");
+				sendDataClear();
+
+				ExpressDatabase database = ExpressDatabase.getInstance(getApplicationContext());
+				for (int i = 0; i < database.size(); i++) {
+					Log.i(TAG, "sending " + i + "....");
+					sendDataAdd(database.getExpress(i).getDataStr());
+				}
+			}
+		}.start();
+	}
+
 	private void sendDataClear() {
 		PutDataMapRequest requestMap = PutDataMapRequest.create(Constants.PATH);
 		requestMap.getDataMap().putString(Constants.EXTRA_EH_ACTION, Constants.EH_ACTION_CLEAR);
+		requestMap.getDataMap().putLong("timestamp", System.currentTimeMillis());
 		PutDataRequest request = requestMap.asPutDataRequest();
-		Wearable.DataApi.putDataItem(mGoogleApiClient, request)
-				.setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
-					@Override
-					public void onResult(DataApi.DataItemResult dataItemResult) {
-						if (!dataItemResult.getStatus().isSuccess()) {
-							Log.e(TAG, "onResult: The status isn't success. Code:" + dataItemResult.getStatus());
-						}
-					}
-				});
+		if (!mGoogleApiClient.isConnected()) {
+			return;
+		}
+		Wearable.DataApi.putDataItem(mGoogleApiClient, request).await();
 	}
 
 	private void sendDataAdd(String jsonStr) {
 		PutDataMapRequest requestMap = PutDataMapRequest.create(Constants.PATH);
 		requestMap.getDataMap().putString(Constants.EXTRA_EH_ACTION, Constants.EH_ACTION_ADD);
 		requestMap.getDataMap().putString(Constants.EH_KEY_DATA, jsonStr);
+		requestMap.getDataMap().putLong("timestamp", System.currentTimeMillis());
 		PutDataRequest request = requestMap.asPutDataRequest();
-		Wearable.DataApi.putDataItem(mGoogleApiClient, request)
-				.setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
-					@Override
-					public void onResult(DataApi.DataItemResult dataItemResult) {
-						if (!dataItemResult.getStatus().isSuccess()) {
-							Log.e(TAG, "onResult: The status isn't success. Code:" + dataItemResult.getStatus());
-						}
-					}
-				});
+		if (!mGoogleApiClient.isConnected()) {
+			return;
+		}
+		Wearable.DataApi.putDataItem(mGoogleApiClient, request).await();
 	}
 
 }
