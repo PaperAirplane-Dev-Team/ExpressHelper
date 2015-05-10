@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 public class Settings {
 
 	public static final String XML_NAME = "settings";
-	public static final String KEY_TOKEN_CHOOSE = "token_choose",
+	public static final String KEY_TOKEN_CHOOSE = "token_choose_new",
 			KEY_CUSTOM_SECRET = "token_secret", KEY_CUSTOM_ID = "token_custom_id",
 			KEY_SWIPE_BACK = "swipe_back",
 			KEY_NOTIFICATION_SOUND = "noti_sound",

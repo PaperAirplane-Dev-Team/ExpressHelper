@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import info.papdt.express.helper.api.KuaiDi100Helper;
@@ -184,32 +185,9 @@ public class ExpressDatabase {
 	public String getDataFromNetwork(String companyCode, String mailNumber) {
 		String[] result = new String[1];
 
-		String secret, app_id;
-
-		int choice = mSets.getInt(Settings.KEY_TOKEN_CHOOSE, 0);
-		if (choice == 4) {
-			Random r = new Random();
-			choice = (choice = r.nextInt(2)) == 2 ? choice : 3;
-		}
-		switch (choice) {
-			case 1:
-				secret = KuaiDi100Helper.mysecret;
-				app_id = KuaiDi100Helper.myid;
-				break;
-			case 2:
-				secret = mSets.getString(Settings.KEY_CUSTOM_SECRET, "error");
-				app_id = mSets.getString(Settings.KEY_CUSTOM_ID, "error");
-				break;
-			case 3:
-				secret = KuaiDi100Helper.smsecret;
-				app_id = KuaiDi100Helper.smid;
-				break;
-			case 0:
-			default:
-				secret = KuaiDi100Helper.xfsecret;
-				app_id = KuaiDi100Helper.xfid;
-				break;
-		}
+		HashMap<String, String> token = Utility.getAPIToken(context);
+		String app_id = token.get("id");
+		String secret = token.get("secret");
 
 		int resultCode = HttpUtils.get(KuaiDi100Helper.getRequestUrl(app_id, secret, companyCode, mailNumber, "utf8"), result);
 		switch (resultCode) {

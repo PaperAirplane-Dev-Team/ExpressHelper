@@ -125,16 +125,19 @@
 		<item>隨機 (默認)</item>
 		<item>稀飯\'s (單日5000次, 感謝微博用戶\@稀饭_Fighting 提供)</item>
 		<item>SkinMe\'s (單日5000次, 感謝微博用戶\@啾咕咕www 提供)</item>
-		<item>備用 (單日2000次)</item>
+		<item>備用 1 (單日2000次)</item>
+		<item>備用 2 (暂不可用，單日5000次)</item>
 		<item>自訂 (推薦經常使用的用戶選擇)</item>
 	</string-array>
 	<string-array name="item_token_list_values">
-		<item>4</item>
 		<item>0</item>
-		<item>3</item>
 		<item>1</item>
 		<item>2</item>
+		<item>3</item>
+		<item>4</item>
+		<item>5</item>
 	</string-array>
+
 	<string name="item_token_custom">自訂密鑰</string>
 	<string name="item_token_custom_desc">如果我們預置的密鑰單日查尋次數用完了, 你可以自訂輸入你的私人密鑰.</string>
 	<string name="dialog_token_custom_title">輸入你的Secret和ID</string>

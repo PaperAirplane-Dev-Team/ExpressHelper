@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.melnykov.fab.FloatingActionButton;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import java.util.HashMap;
 import java.util.Random;
 
 import info.papdt.express.helper.R;
@@ -25,6 +26,7 @@ import info.papdt.express.helper.dao.ExpressDatabase;
 import info.papdt.express.helper.support.ExpressResult;
 import info.papdt.express.helper.support.HttpUtils;
 import info.papdt.express.helper.support.Settings;
+import info.papdt.express.helper.support.Utility;
 
 public class AddActivity extends AbsActivity {
 
@@ -194,32 +196,9 @@ public class AddActivity extends AbsActivity {
 				return FLAG_HAS_BEEN_EXIST;
 			}
 
-			String secret, app_id;
-
-			int choice = mSets.getInt(Settings.KEY_TOKEN_CHOOSE, 0);
-			if (choice == 4) {
-				Random r = new Random();
-				choice = (choice = r.nextInt(2)) == 2 ? choice : 3;
-			}
-			switch (choice) {
-				case 1:
-					secret = KuaiDi100Helper.mysecret;
-					app_id = KuaiDi100Helper.myid;
-					break;
-				case 2:
-					secret = mSets.getString(Settings.KEY_CUSTOM_SECRET, "error");
-					app_id = mSets.getString(Settings.KEY_CUSTOM_ID, "error");
-					break;
-				case 3:
-					secret = KuaiDi100Helper.smsecret;
-					app_id = KuaiDi100Helper.smid;
-					break;
-				case 0:
-				default:
-					secret = KuaiDi100Helper.xfsecret;
-					app_id = KuaiDi100Helper.xfid;
-					break;
-			}
+			HashMap<String, String> token = Utility.getAPIToken(getApplicationContext());
+			String app_id = token.get("id");
+			String secret = token.get("secret");
 
 			int resultCode = HttpUtils.get(KuaiDi100Helper.getRequestUrl(app_id, secret, companyCode, mailNumber, "utf8"), result);
 			switch (resultCode) {

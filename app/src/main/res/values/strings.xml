@@ -129,15 +129,17 @@
         <item>Random (Default)</item>
         <item>XiFang\'s (5000 times per day, thx to Weibo user \@稀饭_Fighting)</item>
         <item>SkinMe\'s (5000 times per day, thx to Weibo user \@啾咕咕www)</item>
-        <item>Alternative (2000 times per day)</item>
+        <item>Alternative 1 (2000 times per day)</item>
+	    <item>Alternative 2 (5000 times per day)</item>
         <item>Custom (recommended for frequent use)</item>
     </string-array>
     <string-array name="item_token_list_values">
-        <item>4</item>
         <item>0</item>
-        <item>3</item>
         <item>1</item>
         <item>2</item>
+        <item>3</item>
+        <item>4</item>
+	    <item>5</item>
     </string-array>
 
     <string name="item_token_custom">Custom Token</string>
