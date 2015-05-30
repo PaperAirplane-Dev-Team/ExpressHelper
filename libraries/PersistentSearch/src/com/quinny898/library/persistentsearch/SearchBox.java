@@ -64,6 +64,7 @@ public class SearchBox extends RelativeLayout {
 	private ProgressBar pb;
 	private ArrayList<SearchResult> initialResults;
 	private boolean searchWithoutSuggestions = true;
+	private boolean shouldOpenKeyboard = true;
 
 	/**
 	 * Create a new searchbox
@@ -233,7 +234,7 @@ public class SearchBox extends RelativeLayout {
 			}
 			closeSearch();
 		} else {
-			openSearch(true);
+			openSearch(shouldOpenKeyboard);
 		}
 		searchOpen = !searchOpen;
 	}
@@ -252,7 +253,15 @@ public class SearchBox extends RelativeLayout {
 			activity.startActivityForResult(intent, 1234);
 		}
 	}
-	
+
+	public boolean willOpenKeyboard() {
+		return shouldOpenKeyboard;
+	}
+
+	public void setShouldOpenKeyboard(boolean b) {
+		this.shouldOpenKeyboard = b;
+	}
+
 	/***
 	 * Set whether to show the progress bar spinner
 	 * @param show

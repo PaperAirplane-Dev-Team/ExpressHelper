@@ -11,6 +11,8 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataMap;
+import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
@@ -55,7 +57,9 @@ public class RefreshListener extends WearableListenerService
 		Log.i(TAG, "onDataChanged");
 		for (DataEvent event : dataEvents) {
 			if (event.getType() == DataEvent.TYPE_CHANGED) {
-				if (Constants.EH_ACTION_REFRESH.equals(event.getDataItem().getUri().getPath())) {
+				DataMap dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
+				String action = dataMap.getString(Constants.EXTRA_EH_ACTION);
+				if (action.equals(Constants.EH_ACTION_REFRESH)) {
 					sendAllData();
 				}
 			}
@@ -100,7 +104,7 @@ public class RefreshListener extends WearableListenerService
 				ExpressDatabase database = ExpressDatabase.getInstance(getApplicationContext());
 				for (int i = 0; i < database.size(); i++) {
 					Log.i(TAG, "sending " + i + "....");
-					sendDataAdd(database.getExpress(i).getDataStr());
+					sendDataAdd(database.getExpress(i).toJSONObject().toString());
 				}
 			}
 		}.start();

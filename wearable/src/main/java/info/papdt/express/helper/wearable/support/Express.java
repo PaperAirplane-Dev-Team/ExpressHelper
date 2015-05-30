@@ -1,6 +1,7 @@
 package info.papdt.express.helper.wearable.support;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -87,6 +88,7 @@ public class Express {
 	}
 
 	public static Express buildFromJSONObject(JSONObject obj) throws JSONException {
+		Log.i("Express Builder", obj.toString());
 		Express newExpress = new Express(obj.getString("companyCode"), obj.getString("mailNumber"));
 		String name;
 		try {

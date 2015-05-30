@@ -6,11 +6,11 @@ android {
 	buildToolsVersion "21.1.2"
 
 	defaultConfig {
-		applicationId "info.papdt.express.helper.wearable"
+		applicationId "info.papdt.express.helper"
 		minSdkVersion 20
 		targetSdkVersion 22
-		versionCode 1
-		versionName "1.0"
+		versionCode 20
+		versionName "1.1.5"
 	}
 	buildTypes {
 		release {

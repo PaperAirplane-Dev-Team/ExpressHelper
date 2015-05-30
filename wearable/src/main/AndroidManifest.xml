@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".support.DataUpdateService">
+        <service android:name="info.papdt.express.helper.wearable.support.DataUpdateService">
 	        <intent-filter>
 		        <action android:name="com.google.android.gms.wearable.BIND_LISTENER"/>
 	        </intent-filter>

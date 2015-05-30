@@ -10,7 +10,7 @@
 		android:id="@+id/statusHeaderView"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
-		android:background="@android:color/transparent"/>
+		android:background="#3e000000"/>
 
 	<FrameLayout
 		android:layout_width="match_parent"

@@ -102,6 +102,7 @@ public class CompanySelectActivity extends AbsActivity {
 		mRecyclerView.setHasFixedSize(true);
 		mSearchBox.setHintText(getString(R.string.search_hint_company));
 		mSearchBox.setLogoText("");
+		mSearchBox.setShouldOpenKeyboard(false);
 	}
 
 	@Override

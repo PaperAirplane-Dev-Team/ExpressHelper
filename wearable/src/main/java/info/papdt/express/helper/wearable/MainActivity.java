@@ -25,6 +25,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import info.papdt.express.helper.R;
 import info.papdt.express.helper.wearable.adapter.HomeWearableListAdapter;
 import info.papdt.express.helper.wearable.support.Constants;
 import info.papdt.express.helper.wearable.support.Express;
@@ -114,8 +115,13 @@ public class MainActivity extends Activity
 		});
 	}
 
-	private void addDebugText(String line) {
-		mDebugText.setText(line + "\n" + mDebugText.getText());
+	private void addDebugText(final String line) {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				mDebugText.setText(line + "\n" + mDebugText.getText());
+			}
+		});
 	}
 
 	@Override
@@ -151,7 +157,12 @@ public class MainActivity extends Activity
 						e.printStackTrace();
 					}
 					mAdapter = new HomeWearableListAdapter(mDatabase);
-					mListView.setAdapter(mAdapter);
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							mListView.setAdapter(mAdapter);
+						}
+					});
 				}
 				if (action.equals(Constants.EH_ACTION_ADD)) {
 					Log.i(TAG, "Received ACTION_ADD");

@@ -5,11 +5,10 @@
               android:layout_height="wrap_content"
               android:layout_gravity="center_horizontal">
 
-	<android.support.wearable.view.CircleImageView
+	<ImageView
 		android:layout_width="48dp"
 		android:layout_height="48dp"
-		android:id="@+id/image_view"
-		android:src="@android:color/white"/>
+		android:id="@+id/image_view"/>
 
 	<LinearLayout
 		android:layout_width="wrap_content"
@@ -33,7 +32,9 @@
 			android:id="@+id/content"
 			android:textAppearance="?android:attr/textAppearanceListItemSmall"
 			android:textSize="12sp"
-			android:text="Content"/>
+			android:text="Content"
+			android:singleLine="true"
+			android:paddingBottom="4dp"/>
 
 	</LinearLayout>
 
