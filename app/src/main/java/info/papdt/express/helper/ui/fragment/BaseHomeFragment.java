@@ -10,15 +10,13 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
-import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 
 import org.json.JSONException;
 
@@ -39,7 +37,7 @@ public abstract class BaseHomeFragment extends Fragment {
 	protected Settings mSets;
 
 	protected SwipeRefreshLayout refreshLayout;
-	protected ObservableRecyclerView mRecyclerView;
+	protected RecyclerView mRecyclerView;
 	protected View headerView;
 
 	protected Context context;
@@ -58,27 +56,13 @@ public abstract class BaseHomeFragment extends Fragment {
 
 		refreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
 
-		mRecyclerView = (ObservableRecyclerView) rootView.findViewById(R.id.scroll);
+		mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 		mRecyclerView.setHasFixedSize(true);
 		headerView = inflater.inflate(R.layout.padding, null);
 
 		Activity parentActivity = getActivity();
 		context = parentActivity.getApplicationContext();
-		if (parentActivity instanceof ObservableScrollViewCallbacks) {
-			// Scroll to the specified position after layout
-			Bundle args = getArguments();
-			if (args != null && args.containsKey(ARG_INITIAL_POSITION)) {
-				final int initialPosition = args.getInt(ARG_INITIAL_POSITION, 0);
-				ScrollUtils.addOnGlobalLayoutListener(mRecyclerView, new Runnable() {
-					@Override
-					public void run() {
-						mRecyclerView.scrollVerticallyToPosition(initialPosition);
-					}
-				});
-			}
-			mRecyclerView.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
-		}
 
 		refreshLayout.setProgressViewEndTarget(
 				true,

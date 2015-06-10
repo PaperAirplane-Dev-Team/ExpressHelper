@@ -7,9 +7,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
@@ -20,14 +20,9 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
-import com.github.ksoichiro.android.observablescrollview.ScrollState;
-import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
-import com.github.ksoichiro.android.observablescrollview.Scrollable;
+import com.astuetz.PagerSlidingTabStrip;
+import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.melnykov.fab.FloatingActionButton;
-import com.nineoldandroids.view.ViewHelper;
-import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.quinny898.library.persistentsearch.SearchBox;
 
 import org.json.JSONException;
@@ -47,23 +42,19 @@ import info.papdt.express.helper.ui.adapter.CompanyListRecyclerAdapter;
 import info.papdt.express.helper.ui.adapter.HomePagerAdapter;
 import info.papdt.express.helper.ui.common.MyRecyclerViewAdapter;
 import info.papdt.express.helper.ui.fragment.BaseHomeFragment;
-import info.papdt.express.helper.view.SlidingTabLayout;
 
-public class MainActivity extends AbsActivity implements ObservableScrollViewCallbacks {
+public class MainActivity extends AbsActivity {
 
 	public ExpressDatabase mExpressDB;
 
-	private View mHeaderView;
-	private int mBaseTranslationY;
-
+	private MaterialViewPager mMaterialPager;
 	private ViewPager mPager;
-	private SlidingTabLayout mSlidingTab;
 	private HomePagerAdapter mPagerAdapter;
 	private FloatingActionButton mFAB;
 
 	private SearchBox mSearchBox;
 	private View mCompanyListPage, mCompanyListPageBackground;
-	private ObservableRecyclerView mCompanyList;
+	private RecyclerView mCompanyList;
 	private CompanyListRecyclerAdapter mCompanyListAdapter;
 
 	public static final int REQUEST_ADD = 100, RESULT_ADD_FINISH = 100,
@@ -87,11 +78,11 @@ public class MainActivity extends AbsActivity implements ObservableScrollViewCal
 		refreshDatabase(false);
 
 		/** Init ViewPager */
-		mPagerAdapter = new HomePagerAdapter(getApplicationContext(),
-				getSupportFragmentManager());
+		mPagerAdapter = new HomePagerAdapter(getApplicationContext(), getSupportFragmentManager());
 		mPager.setAdapter(mPagerAdapter);
 		mPager.setCurrentItem(selectedTab, false);
-		mSlidingTab.setViewPager(mPager);
+		PagerSlidingTabStrip tabView = mMaterialPager.getPagerTitleStrip();
+		tabView.setViewPager(mPager);
 
 		Intent intent = new Intent(this, RefreshListener.class);
 		startService(intent);
@@ -132,53 +123,22 @@ public class MainActivity extends AbsActivity implements ObservableScrollViewCal
 		View statusHeaderView1 = findViewById(R.id.statusHeaderView1);
 		statusHeaderView1.getLayoutParams().height = statusBarHeight;
 
+		mMaterialPager = (ViewPager) findViewById(R.id.materialViewPager);
+		mToolbar = mMaterialPager.getToolbar();
+		setSupportActionBar(mToolbar);
+		mActionBar = getSupportActionBar();
+
 		mSearchBox = (SearchBox) findViewById(R.id.searchBox);
 		mCompanyListPage = findViewById(R.id.company_list_page);
 		mCompanyListPageBackground = findViewById(R.id.company_list_page_background);
-		mCompanyList = (ObservableRecyclerView) mCompanyListPage.findViewById(R.id.recycler_view);
+		mCompanyList = (RecyclerView) mCompanyListPage.findViewById(R.id.recycler_view);
 
 		mSearchBox.setLogoText("");
 		mSearchBox.setHintText(getString(R.string.search_hint_company));
 		mCompanyList.setLayoutManager(new LinearLayoutManager(this));
 		mCompanyList.setHasFixedSize(true);
 
-		mHeaderView = findViewById(R.id.header);
-		ViewCompat.setElevation(mHeaderView, getResources().getDimension(R.dimen.toolbar_elevation));
-		mPager = (ViewPager) findViewById(R.id.pager);
-
-		/** Set up SlidingTabLayout */
-		mSlidingTab = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
-		mSlidingTab.setCustomTabView(R.layout.tab_indicator, android.R.id.text1);
-		mSlidingTab.setSelectedIndicatorColors(getResources().getColor(android.R.color.white));
-		mSlidingTab.setDistributeEvenly(true);
-		mSlidingTab.setOnTabItemClickListener(new SlidingTabLayout.OnTabItemClickListener() {
-			@Override
-			public void onTabItemClick(int pos) {
-				BaseHomeFragment fragment = (BaseHomeFragment) mPagerAdapter.getItemAt(pos);
-				try {
-					fragment.scrollToTopItem();
-				} catch (Exception e) {
-
-				}
-			}
-		});
-
-		// When the page is selected, other fragments' scrollY should be adjusted
-		// according to the toolbar status(shown/hidden)
-		mSlidingTab.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-			@Override
-			public void onPageScrolled(int i, float v, int i2) {
-			}
-
-			@Override
-			public void onPageSelected(int i) {
-				propagateToolbarState(toolbarIsShown());
-			}
-
-			@Override
-			public void onPageScrollStateChanged(int i) {
-			}
-		});
+		mPager = mMaterialPager.getViewPager();
 
 		/** Set up FloatingActionButton */
 		mFAB = (FloatingActionButton) findViewById(R.id.fab);
@@ -273,149 +233,6 @@ public class MainActivity extends AbsActivity implements ObservableScrollViewCal
 		} else {
 			super.onBackPressed();
 		}
-	}
-
-	@Override
-	public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-		if (dragging) {
-			int toolbarHeight = mToolbar.getHeight();
-			float currentHeaderTranslationY = ViewHelper.getTranslationY(mHeaderView);
-			if (firstScroll) {
-				if (-toolbarHeight < currentHeaderTranslationY) {
-					mBaseTranslationY = scrollY;
-				}
-			}
-			float headerTranslationY = ScrollUtils.getFloat(-(scrollY - mBaseTranslationY), -toolbarHeight, 0);
-			ViewPropertyAnimator.animate(mHeaderView).cancel();
-			ViewHelper.setTranslationY(mHeaderView, headerTranslationY);
-		}
-	}
-
-	@Override
-	public void onDownMotionEvent() {
-	}
-
-	@Override
-	public void onUpOrCancelMotionEvent(ScrollState scrollState) {
-		mBaseTranslationY = 0;
-
-		Fragment fragment = getCurrentFragment();
-		if (fragment == null) {
-			return;
-		}
-		View view = fragment.getView();
-		if (view == null) {
-			return;
-		}
-
-		// ObservableXxxViews have same API
-		// but currently they don't have any common interfaces.
-		adjustToolbar(scrollState, view);
-	}
-
-	private Fragment getCurrentFragment() {
-		return mPagerAdapter.getItemAt(mPager.getCurrentItem());
-	}
-
-	private void adjustToolbar(ScrollState scrollState, View view) {
-		int toolbarHeight = mToolbar.getHeight();
-		final Scrollable scrollView = (Scrollable) view.findViewById(R.id.scroll);
-		if (scrollView == null) {
-			return;
-		}
-		int scrollY = scrollView.getCurrentScrollY();
-		if (scrollState == ScrollState.DOWN) {
-			showToolbar();
-		} else if (scrollState == ScrollState.UP) {
-			if (toolbarHeight <= scrollY) {
-				hideToolbar();
-			} else {
-				showToolbar();
-			}
-		} else {
-			// Even if onScrollChanged occurs without scrollY changing, toolbar should be adjusted
-			if (toolbarIsShown() || toolbarIsHidden()) {
-				// Toolbar is completely moved, so just keep its state
-				// and propagate it to other pages
-				propagateToolbarState(toolbarIsShown());
-			} else {
-				// Toolbar is moving but doesn't know which to move:
-				// you can change this to hideToolbar()
-				showToolbar();
-			}
-		}
-	}
-
-	private void propagateToolbarState(boolean isShown) {
-		int toolbarHeight = mToolbar.getHeight();
-
-		// Set scrollY for the fragments that are not created yet
-		mPagerAdapter.setScrollY(isShown ? 0 : toolbarHeight);
-
-		// Set scrollY for the active fragments
-		for (int i = 0; i < mPagerAdapter.getCount(); i++) {
-			// Skip current item
-			if (i == mPager.getCurrentItem()) {
-				continue;
-			}
-
-			// Skip destroyed or not created item
-			Fragment f = mPagerAdapter.getItemAt(i);
-			if (f == null) {
-				continue;
-			}
-
-			View view = f.getView();
-			if (view == null) {
-				continue;
-			}
-			propagateToolbarState(isShown, view, toolbarHeight);
-		}
-	}
-
-	private void propagateToolbarState(boolean isShown, View view, int toolbarHeight) {
-		Scrollable scrollView = (Scrollable) view.findViewById(R.id.scroll);
-		if (scrollView == null) {
-			return;
-		}
-		if (isShown) {
-			// Scroll up
-			if (0 < scrollView.getCurrentScrollY()) {
-				scrollView.scrollVerticallyTo(0);
-			}
-		} else {
-			// Scroll down (to hide padding)
-			if (scrollView.getCurrentScrollY() < toolbarHeight) {
-				scrollView.scrollVerticallyTo(toolbarHeight);
-			}
-		}
-	}
-
-	private boolean toolbarIsShown() {
-		return ViewHelper.getTranslationY(mHeaderView) == 0;
-	}
-
-	private boolean toolbarIsHidden() {
-		return ViewHelper.getTranslationY(mHeaderView) == - mToolbar.getHeight();
-	}
-
-	private void showToolbar() {
-		float headerTranslationY = ViewHelper.getTranslationY(mHeaderView);
-		if (headerTranslationY != 0) {
-			ViewPropertyAnimator.animate(mHeaderView).cancel();
-			ViewPropertyAnimator.animate(mHeaderView).translationY(0).setDuration(200).start();
-		}
-		propagateToolbarState(true);
-	}
-
-	private void hideToolbar() {
-		float headerTranslationY = ViewHelper.getTranslationY(mHeaderView);
-		int toolbarHeight = mToolbar.getHeight();
-		if (headerTranslationY != -toolbarHeight) {
-			ViewPropertyAnimator.animate(mHeaderView).cancel();
-			ViewPropertyAnimator.animate(mHeaderView).translationY(-toolbarHeight).setDuration(200).start();
-		}
-		propagateToolbarState(false);
 	}
 
 	@Override

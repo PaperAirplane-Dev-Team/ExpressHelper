@@ -22,42 +22,17 @@
 			android:layout_width="match_parent"
 			android:layout_height="match_parent">
 
-			<FrameLayout
+			<com.github.florent37.materialviewpager.MaterialViewPager
+				android:id="@+id/materialViewPager"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				android:paddingTop="@dimen/tab_height">
-
-				<android.support.v4.view.ViewPager
-					android:id="@+id/pager"
-					android:layout_width="match_parent"
-					android:layout_height="match_parent" />
-
-			</FrameLayout>
-
-			<LinearLayout
-				android:id="@+id/header"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="?attr/colorPrimary"
-				android:orientation="vertical">
-
-				<android.support.v7.widget.Toolbar
-					android:id="@+id/toolbar"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:background="?attr/colorPrimary"
-					android:minHeight="?attr/actionBarSize"
-					app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-					app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
-
-				<info.papdt.express.helper.view.SlidingTabLayout
-					android:id="@+id/sliding_tabs"
-					android:layout_width="wrap_content"
-					android:layout_height="@dimen/tab_height"
-					android:layout_marginLeft="16dp"
-					android:background="?attr/colorPrimary"/>
-
-			</LinearLayout>
+				app:viewpager_color="?attr/colorPrimary"
+				app:viewpager_hideLogoWithFade="false"
+				app:viewpager_hideToolbarAndTitle="true"
+				app:viewpager_enableToolbarElevation="true"
+				app:viewpager_parallaxHeaderFactor="1.5"
+				app:viewpager_headerAdditionalHeight="20dp"
+				/>
 
 			<com.melnykov.fab.FloatingActionButton
 				android:layout_width="wrap_content"
@@ -103,7 +78,7 @@
 				android:id="@+id/searchBox"
 				android:visibility="gone"/>
 
-			<com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView
+			<android.support.v7.widget.RecyclerView
 				android:id="@+id/recycler_view"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"/>
