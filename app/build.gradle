@@ -31,14 +31,17 @@ dependencies {
     compile project(':libraries:SwipeBackLayout')
     compile project(':libraries:PersistentSearch')
 	compile project(':port')
-    compile 'com.android.support:appcompat-v7:22.+'
-    compile 'com.android.support:cardview-v7:22.+'
-    compile 'com.android.support:support-v13:22.+'
-    compile 'com.melnykov:floatingactionbutton:1.1.+'
+    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.android.support:cardview-v7:22.2.0'
+    compile 'com.android.support:support-v13:22.2.0'
+    compile 'com.melnykov:floatingactionbutton:1.3.0'
     compile 'com.rengwuxian.materialedittext:library:1.8.+'
     compile 'de.hdodenhof:circleimageview:1.2.+'
-    compile 'com.afollestad:material-dialogs:0.6.3.2'
+    compile 'com.afollestad:material-dialogs:0.7.5.5'
     compile 'com.github.ksoichiro:android-observablescrollview:1.5.0'
+    compile ('com.github.florent37:materialviewpager:1.0.4@aar'){
+        transitive = true
+    }
 	compile 'com.google.android.support:wearable:+'
 	compile 'com.google.android.gms:play-services-wearable:+'
 	wearApp project(':wearable')
