@@ -36,6 +36,7 @@
 	<string name="string_copy_format">我的包裹：%1$s. 速遞單號：%2$s. 速遞公司：%3$s. </string>
 	<string name="string_share_format">包裹狀態：%1$s. 最新狀況：%2$s.</string>
 	<string name="action_should_push">推送通知</string>
+	<string name="list_error_cannot_get_latest_status">拉取最新資訊失敗。</string>
 
 	<string-array name="status">
 		<item>失敗</item>

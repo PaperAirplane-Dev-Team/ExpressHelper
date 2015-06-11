@@ -12,7 +12,7 @@ import info.papdt.express.helper.R;
 import info.papdt.express.helper.api.KuaiDi100Helper;
 import info.papdt.express.helper.ui.common.MyRecyclerViewAdapter;
 
-public class CompanyListRecyclerAdapter extends MyRecyclerViewAdapter {
+public class CompanyListRecyclerAdapter extends MyRecyclerViewAdapter<CompanyListRecyclerAdapter.ViewHolder> {
 
 	private ArrayList<KuaiDi100Helper.CompanyInfo.Company> data;
 
@@ -22,7 +22,7 @@ public class CompanyListRecyclerAdapter extends MyRecyclerViewAdapter {
 	}
 
 	@Override
-	public ClickableViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		bindContext(parent.getContext());
 		View v = LayoutInflater.from(getContext())
 				.inflate(R.layout.list_item_company, parent, false);
@@ -31,23 +31,19 @@ public class CompanyListRecyclerAdapter extends MyRecyclerViewAdapter {
 	}
 
 	@Override
-	public void onBindViewHolder(ClickableViewHolder holder, int position) {
-		if (!(holder instanceof ViewHolder)) return;
-
+	public void onBindViewHolder(ViewHolder holder, int position) {
 		super.onBindViewHolder(holder, position);
 
-		ViewHolder h = (ViewHolder) holder;
-
-		h.setTitle(data.get(position).name);
+		holder.setTitle(data.get(position).name);
 		if (data.get(position).phone != null) {
-			h.tv_info.setVisibility(View.VISIBLE);
-			h.tv_info.setText(data.get(position).phone);
+			holder.tv_info.setVisibility(View.VISIBLE);
+			holder.tv_info.setText(data.get(position).phone);
 		} else {
 			if (data.get(position).website != null) {
-				h.tv_info.setVisibility(View.VISIBLE);
-				h.tv_info.setText(data.get(position).website);
+				holder.tv_info.setVisibility(View.VISIBLE);
+				holder.tv_info.setText(data.get(position).website);
 			} else {
-				h.tv_info.setVisibility(View.GONE);
+				holder.tv_info.setVisibility(View.GONE);
 			}
 		}
 	}
@@ -61,7 +57,7 @@ public class CompanyListRecyclerAdapter extends MyRecyclerViewAdapter {
 		return data.get(pos);
 	}
 
-	public class ViewHolder extends ClickableViewHolder {
+	public class ViewHolder extends MyRecyclerViewAdapter.ClickableViewHolder {
 
 		public CircleImageView iv_round;
 		public TextView tv_name, tv_info, tv_center;

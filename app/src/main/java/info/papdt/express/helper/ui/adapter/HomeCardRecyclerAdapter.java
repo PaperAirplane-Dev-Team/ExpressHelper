@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
 import java.util.Map;
@@ -15,59 +16,52 @@ import info.papdt.express.helper.dao.ExpressDatabase;
 import info.papdt.express.helper.support.Express;
 import info.papdt.express.helper.support.ExpressResult;
 import info.papdt.express.helper.support.Settings;
+import info.papdt.express.helper.ui.common.MultiSelectableRecyclerAdapter;
 import info.papdt.express.helper.ui.common.MyRecyclerViewAdapter;
 
-public class HomeCardRecyclerAdapter extends MyRecyclerViewAdapter {
-
-	private static final int VIEW_TYPE_HEADER = 0;
-	private static final int VIEW_TYPE_ITEM = 1;
+public class HomeCardRecyclerAdapter extends MultiSelectableRecyclerAdapter<HomeCardRecyclerAdapter.ViewHolder> {
 
 	private ExpressDatabase db;
 	private int type;
-	private View headerView;
 
 	private int[] defaultColors;
 
 	public static final int TYPE_ALL = 0, TYPE_UNRECEIVED = 1, TYPE_RECEIVED = 2;
 
-	public HomeCardRecyclerAdapter(Context context, ExpressDatabase db, View headerView) {
-		this(context, db, TYPE_ALL, headerView);
+	public HomeCardRecyclerAdapter(Context context, ExpressDatabase db) {
+		this(context, db, TYPE_ALL);
 	}
 
-	public HomeCardRecyclerAdapter(Context context, ExpressDatabase db, int type, View headerView) {
+	public HomeCardRecyclerAdapter(Context context, ExpressDatabase db, int type) {
 		super(!Settings.getInstance(context).getBoolean(Settings.KEY_DISABLE_ANIMATION, false));
 		this.db = db;
 		this.defaultColors = context.getResources().getIntArray(R.array.statusColor);
 		this.type = type;
-		this.headerView = headerView;
 	}
 
 	@Override
-	public ClickableViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		switch (viewType) {
-			case VIEW_TYPE_HEADER:
-				return new HeaderViewHolder(headerView);
-			case VIEW_TYPE_ITEM:
-				bindContext(parent.getContext());
-				View v = LayoutInflater.from(getContext())
-						.inflate(R.layout.card_express_item, parent, false);
-				return new ViewHolder(v);
-			default:
-				return null;
-		}
+	public boolean onItemSelect(int position) {
+		return position < getExpressCount();
 	}
 
 	@Override
-	public void onBindViewHolder(ClickableViewHolder viewHolder, final int position) {
-		if (!(viewHolder instanceof ViewHolder)) return;
+	public boolean onItemUnselect(int position) {
+		return position < getExpressCount();
+	}
 
-		super.onBindViewHolder(viewHolder, position);
+	@Override
+	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		bindContext(parent.getContext());
+		View v = LayoutInflater.from(getContext()).inflate(R.layout.card_express_item, parent, false);
+		return new ViewHolder(v);
+	}
 
-		Express item = getItem(position + (headerView != null ? -1 : 0));
+	@Override
+	public void onBindViewHolder(ViewHolder holder, final int position) {
+		super.onBindViewHolder(holder, position);
 
+		Express item = getItem(position);
 		ExpressResult cache = item.getData();
-
-		ViewHolder holder = (ViewHolder) viewHolder;
 
 		ColorDrawable drawable = new ColorDrawable(defaultColors[cache.getTrueStatus()]);
 		holder.iv_round.setImageDrawable(drawable);
@@ -78,14 +72,15 @@ public class HomeCardRecyclerAdapter extends MyRecyclerViewAdapter {
 		try {
 			Map<String, String> lastData = cache.data.get(cache.data.size() - 1);
 			holder.tv_center_round.setText(cache.expTextName.substring(0, 1));
-			desp = lastData.get("context");
-			time = lastData.get("time");
+			holder.tv_desp.setText(lastData.get("context"));
+			holder.tv_time.setText(lastData.get("time"));
+			holder.tv_time.setVisibility(View.VISIBLE);
 		} catch (Exception e) {
-			desp = "failed";
-			time = "1970/01/01";
+			holder.tv_desp.setText(R.string.list_error_cannot_get_latest_status);
+			holder.tv_time.setVisibility(View.GONE);
 		}
-		holder.tv_desp.setText(desp);
-		holder.tv_time.setText(time);
+
+		holder.changeViewState(getSelectStates()[position], false);
 	}
 
 	public int getExpressCount() {
@@ -101,14 +96,7 @@ public class HomeCardRecyclerAdapter extends MyRecyclerViewAdapter {
 
 	@Override
 	public int getItemCount() {
-		int result = getExpressCount();
-		if (headerView != null) result++;
-		return result;
-	}
-
-	@Override
-	public int getItemViewType(int position) {
-		return (position == 0 && headerView != null) ? VIEW_TYPE_HEADER : VIEW_TYPE_ITEM;
+		return getExpressCount();
 	}
 
 	public Express getItem(int i) {
@@ -122,10 +110,11 @@ public class HomeCardRecyclerAdapter extends MyRecyclerViewAdapter {
 		return null;
 	}
 
-	public class ViewHolder extends ClickableViewHolder {
+	public class ViewHolder extends MultiSelectableRecyclerAdapter.SelectableViewHolder {
 
 		public CircleImageView iv_round;
 		public TextView tv_title, tv_desp, tv_time, tv_center_round;
+		public View mSelectStateView;
 
 		public ViewHolder(View itemView) {
 			super(itemView);
@@ -134,14 +123,21 @@ public class HomeCardRecyclerAdapter extends MyRecyclerViewAdapter {
 			this.tv_desp = (TextView) itemView.findViewById(R.id.tv_desp);
 			this.tv_time = (TextView) itemView.findViewById(R.id.tv_time);
 			this.tv_center_round = (TextView) itemView.findViewById(R.id.center_text);
+			this.mSelectStateView = itemView.findViewById(R.id.selected_state);
 		}
 
-	}
-
-	public class HeaderViewHolder extends ClickableViewHolder {
-
-		public HeaderViewHolder(View view) {
-			super(view);
+		@Override
+		public void changeViewState(boolean isSelected, boolean animate) {
+			if (animate) {
+				this.mSelectStateView.animate()
+						.alpha(isSelected ? 1f : 0f)
+						.scaleX(isSelected ? 1f : 0f)
+						.scaleY(isSelected ? 1f : 0f)
+						.setInterpolator(new OvershootInterpolator())
+						.start();
+			} else {
+				this.mSelectStateView.setAlpha(isSelected ? 1f : 0f);
+			}
 		}
 
 	}

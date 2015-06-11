@@ -46,6 +46,7 @@
     <string name="string_copy_format">My package: %1$s. Mail number: %2$s. Carrier: %3$s. </string>
     <string name="string_share_format">The status: %1$s. The latest information: %2$s.</string>
     <string name="action_should_push">Push message</string>
+    <string name="list_error_cannot_get_latest_status">Cannot get the latest status.</string>
 
     <string-array name="status">
         <item>Failed</item>

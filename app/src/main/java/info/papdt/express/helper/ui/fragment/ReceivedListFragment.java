@@ -15,7 +15,7 @@ public class ReceivedListFragment extends BaseHomeFragment {
 
 	@Override
 	public void setUpAdapter() {
-		mAdapter = new HomeCardRecyclerAdapter(getActivity().getApplicationContext(), mDB, HomeCardRecyclerAdapter.TYPE_RECEIVED, headerView);
+		mAdapter = new HomeCardRecyclerAdapter(getActivity().getApplicationContext(), mDB, HomeCardRecyclerAdapter.TYPE_RECEIVED);
 		mRecyclerView.setAdapter(mAdapter);
 		setUpAdapterListener();
 	}

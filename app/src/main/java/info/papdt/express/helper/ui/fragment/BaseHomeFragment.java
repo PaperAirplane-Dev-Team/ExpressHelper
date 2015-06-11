@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
 
 import org.json.JSONException;
 
@@ -38,7 +39,6 @@ public abstract class BaseHomeFragment extends Fragment {
 
 	protected SwipeRefreshLayout refreshLayout;
 	protected RecyclerView mRecyclerView;
-	protected View headerView;
 
 	protected Context context;
 
@@ -59,7 +59,6 @@ public abstract class BaseHomeFragment extends Fragment {
 		mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 		mRecyclerView.setHasFixedSize(true);
-		headerView = inflater.inflate(R.layout.padding, null);
 
 		Activity parentActivity = getActivity();
 		context = parentActivity.getApplicationContext();
@@ -150,6 +149,7 @@ public abstract class BaseHomeFragment extends Fragment {
 				return true;
 			}
 		});
+		mRecyclerView.setAdapter(new RecyclerViewMaterialAdapter(adapter));
 	}
 
 	public Handler mHandler = new Handler() {

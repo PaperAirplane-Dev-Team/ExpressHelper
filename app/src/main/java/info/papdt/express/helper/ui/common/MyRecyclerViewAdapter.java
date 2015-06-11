@@ -9,7 +9,7 @@ import android.view.animation.AnimationUtils;
 
 import info.papdt.express.helper.R;
 
-public abstract class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ClickableViewHolder> {
+public abstract class MyRecyclerViewAdapter<VH extends MyRecyclerViewAdapter.ClickableViewHolder> extends RecyclerView.Adapter<VH> {
 
 	private int lastPosition = -1;
 	private boolean firstLoad = true;
@@ -49,7 +49,7 @@ public abstract class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyc
 	}
 
 	@Override
-	public void onBindViewHolder(ClickableViewHolder holder, final int position) {
+	public void onBindViewHolder(VH holder, final int position) {
 		holder.getParentView().setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -68,7 +68,7 @@ public abstract class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyc
 				}
 			}
 		});
-		if (useAnimation) setAnimation(holder.parentView, position);
+		if (useAnimation) setAnimation(holder.getParentView(), position);
 	}
 
 	private void setAnimation(final View viewToAnimate, final int position) {
