@@ -23,20 +23,22 @@ public class ExpressDatabase {
 
 	private ArrayList<Express> mExpressArray, array_ur, array_ok;
 	private Context context;
-	private Settings mSets;
 
 	private final static String TAG = "ExpressDatabase";
 
+	private static ExpressDatabase sInstance;
+
 	public ExpressDatabase(Context context) {
 		this.context = context;
-		this.mSets = Settings.getInstance(context);
 		mExpressArray = new ArrayList<>();
 	}
 
 	public static ExpressDatabase getInstance(Context context) {
-		ExpressDatabase db = new ExpressDatabase(context);
-		db.init();
-		return db;
+		if (sInstance == null) {
+			sInstance = new ExpressDatabase(context);
+			sInstance.init();
+		}
+		return sInstance;
 	}
 
 	public void addExpress(String jsonStr, String name) {

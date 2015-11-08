@@ -12,27 +12,45 @@
 		android:layout_height="match_parent"
 		android:orientation="vertical">
 
-		<View
-			android:id="@+id/statusHeaderView"
+		<View android:id="@+id/statusHeaderView"
+		      android:layout_width="match_parent"
+		      android:layout_height="0dp"
+		      android:background="@color/status_header_color"/>
+
+		<android.support.design.widget.CoordinatorLayout
 			android:layout_width="match_parent"
 			android:layout_height="0dp"
-			android:background="@color/status_header_color"/>
+			android:layout_weight="1"
+			android:id="@+id/coordinator_layout">
 
-		<FrameLayout
-			android:layout_width="match_parent"
-			android:layout_height="match_parent">
+			<android.support.design.widget.AppBarLayout
+				android:id="@+id/appbar"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-			<com.github.florent37.materialviewpager.MaterialViewPager
-				android:id="@+id/materialViewPager"
+				<android.support.v7.widget.Toolbar
+					android:layout_width="match_parent"
+					android:layout_height="?attr/actionBarSize"
+					android:background="?attr/colorPrimary"
+					android:id="@+id/toolbar"
+					app:layout_scrollFlags="scroll|enterAlways"
+					app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+				<android.support.design.widget.TabLayout
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:id="@+id/tabs"
+					android:layout_marginLeft="8dp"
+					android:layout_marginRight="8dp"/>
+
+			</android.support.design.widget.AppBarLayout>
+
+			<android.support.v4.view.ViewPager
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				app:viewpager_color="?attr/colorPrimary"
-				app:viewpager_hideLogoWithFade="false"
-				app:viewpager_hideToolbarAndTitle="true"
-				app:viewpager_enableToolbarElevation="true"
-				app:viewpager_parallaxHeaderFactor="1.5"
-				app:viewpager_headerAdditionalHeight="20dp"
-				/>
+				android:id="@+id/pager"
+				app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 			<com.melnykov.fab.FloatingActionButton
 				android:layout_width="wrap_content"
@@ -42,10 +60,10 @@
 				android:layout_marginBottom="16dp"
 				android:layout_marginRight="16dp"
 				android:src="@drawable/ic_add_white_24dp"
-				app:fab_colorNormal="@color/pink_500"
-				app:fab_colorPressed="@color/pink_300"/>
+				app:fab_colorNormal="@color/indigo_500"
+				app:fab_colorPressed="@color/indigo_400"/>
 
-		</FrameLayout>
+		</android.support.design.widget.CoordinatorLayout>
 
 	</LinearLayout>
 

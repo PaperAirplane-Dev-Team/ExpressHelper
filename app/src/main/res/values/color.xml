@@ -13,6 +13,8 @@
 	<color name="pink_800">#AD1457</color>
 
 	<color name="indigo_400">#5C6BC0</color>
+	<color name="indigo_500">#3F51B5</color>
+	<color name="indigo_800">#283593</color>
 
 	<color name="blue_500">#2196F3</color>
 
@@ -26,7 +28,7 @@
 
 	<color name="brown_500">#795548</color>
 
-	<color name="status_header_color">@color/pink_500</color>
+	<color name="status_header_color">@color/indigo_500</color>
 
 	<array name="statusColor">
 		<item>@color/red_500</item>

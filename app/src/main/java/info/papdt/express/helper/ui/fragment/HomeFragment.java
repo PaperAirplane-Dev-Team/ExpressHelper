@@ -17,20 +17,13 @@ public class HomeFragment extends BaseHomeFragment {
 
 	@Override
 	public void setUpAdapter() {
-		mAdapter = new HomeCardRecyclerAdapter(getActivity().getApplicationContext(), mDB);
-		mRecyclerView.setAdapter(mAdapter);
-		mAdapter.setOnSelectingStateCallback(new MultiSelectableRecyclerAdapter.OnSelectingStateCallback() {
-			@Override
-			public void onStart() {
-				// TODO
-			}
-
-			@Override
-			public void onEnd() {
-				// TODO
-			}
-		});
-		setUpAdapterListener();
+		setListAdapter(
+				new HomeCardRecyclerAdapter(
+						getActivity().getApplicationContext(),
+						mDB,
+						HomeCardRecyclerAdapter.TYPE_ALL
+				)
+		);
 	}
 
 }

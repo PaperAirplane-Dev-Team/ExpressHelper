@@ -17,7 +17,6 @@ import info.papdt.express.helper.support.Express;
 import info.papdt.express.helper.support.ExpressResult;
 import info.papdt.express.helper.support.Settings;
 import info.papdt.express.helper.ui.common.MultiSelectableRecyclerAdapter;
-import info.papdt.express.helper.ui.common.MyRecyclerViewAdapter;
 
 public class HomeCardRecyclerAdapter extends MultiSelectableRecyclerAdapter<HomeCardRecyclerAdapter.ViewHolder> {
 
@@ -27,10 +26,6 @@ public class HomeCardRecyclerAdapter extends MultiSelectableRecyclerAdapter<Home
 	private int[] defaultColors;
 
 	public static final int TYPE_ALL = 0, TYPE_UNRECEIVED = 1, TYPE_RECEIVED = 2;
-
-	public HomeCardRecyclerAdapter(Context context, ExpressDatabase db) {
-		this(context, db, TYPE_ALL);
-	}
 
 	public HomeCardRecyclerAdapter(Context context, ExpressDatabase db, int type) {
 		super(!Settings.getInstance(context).getBoolean(Settings.KEY_DISABLE_ANIMATION, false));
@@ -68,7 +63,6 @@ public class HomeCardRecyclerAdapter extends MultiSelectableRecyclerAdapter<Home
 
 		holder.tv_title.setText(item.getName());
 
-		String desp, time;
 		try {
 			Map<String, String> lastData = cache.data.get(cache.data.size() - 1);
 			holder.tv_center_round.setText(cache.expTextName.substring(0, 1));

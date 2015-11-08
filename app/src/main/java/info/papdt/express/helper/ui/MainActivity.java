@@ -6,10 +6,13 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
@@ -20,8 +23,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.astuetz.PagerSlidingTabStrip;
-import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.melnykov.fab.FloatingActionButton;
 import com.quinny898.library.persistentsearch.SearchBox;
 
@@ -45,11 +46,11 @@ import info.papdt.express.helper.ui.fragment.BaseHomeFragment;
 
 public class MainActivity extends AbsActivity {
 
-	public ExpressDatabase mExpressDB;
+	private ExpressDatabase mExpressDB;
 
-	private MaterialViewPager mMaterialPager;
+	private TabLayout mTabLayout;
 	private ViewPager mPager;
-	private HomePagerAdapter mPagerAdapter;
+	private static HomePagerAdapter mPagerAdapter;
 	private FloatingActionButton mFAB;
 
 	private SearchBox mSearchBox;
@@ -59,10 +60,11 @@ public class MainActivity extends AbsActivity {
 
 	public static final int REQUEST_ADD = 100, RESULT_ADD_FINISH = 100,
 			REQUEST_DETAILS = 101, RESULT_HAS_CHANGED = 101;
+	public static final int FLAG_UPDATE_PAGES = 100;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState, false);
 		setContentView(R.layout.activity_main);
 
 		int selectedTab = mSets.getInt(Settings.STATE_SELECTED_TAB, 0);
@@ -74,15 +76,14 @@ public class MainActivity extends AbsActivity {
 		setSwipeBackEnable(false);
 
 		/** Init Database */
-		mExpressDB = new ExpressDatabase(getApplicationContext());
+		mExpressDB = ExpressDatabase.getInstance(getApplicationContext());
 		refreshDatabase(false);
 
 		/** Init ViewPager */
 		mPagerAdapter = new HomePagerAdapter(getApplicationContext(), getSupportFragmentManager());
 		mPager.setAdapter(mPagerAdapter);
 		mPager.setCurrentItem(selectedTab, false);
-		PagerSlidingTabStrip tabView = mMaterialPager.getPagerTitleStrip();
-		tabView.setViewPager(mPager);
+		mTabLayout.setupWithViewPager(mPager);
 
 		Intent intent = new Intent(this, RefreshListener.class);
 		startService(intent);
@@ -106,16 +107,7 @@ public class MainActivity extends AbsActivity {
 				e.printStackTrace();
 			}
 		}
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					mPagerAdapter.notifyDataSetChanged();
-				} catch (Exception e) {
-					
-				}
-			}
-		});
+		UIHandler.sendEmptyMessage(FLAG_UPDATE_PAGES);
 	}
 
 	@Override
@@ -123,10 +115,10 @@ public class MainActivity extends AbsActivity {
 		View statusHeaderView1 = findViewById(R.id.statusHeaderView1);
 		statusHeaderView1.getLayoutParams().height = statusBarHeight;
 
-		mMaterialPager = (ViewPager) findViewById(R.id.materialViewPager);
-		mToolbar = mMaterialPager.getToolbar();
+		mToolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(mToolbar);
 		mActionBar = getSupportActionBar();
+		mActionBar.setDisplayHomeAsUpEnabled(false);
 
 		mSearchBox = (SearchBox) findViewById(R.id.searchBox);
 		mCompanyListPage = findViewById(R.id.company_list_page);
@@ -138,7 +130,8 @@ public class MainActivity extends AbsActivity {
 		mCompanyList.setLayoutManager(new LinearLayoutManager(this));
 		mCompanyList.setHasFixedSize(true);
 
-		mPager = mMaterialPager.getViewPager();
+		mPager = (ViewPager) findViewById(R.id.pager);
+		mTabLayout = (TabLayout) findViewById(R.id.tabs);
 
 		/** Set up FloatingActionButton */
 		mFAB = (FloatingActionButton) findViewById(R.id.fab);
@@ -376,5 +369,18 @@ public class MainActivity extends AbsActivity {
 		}
 
 	}
+
+	public static Handler UIHandler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+				case FLAG_UPDATE_PAGES:
+					mPagerAdapter.notifyDataSetChanged();
+					break;
+			}
+		}
+
+	};
 
 }

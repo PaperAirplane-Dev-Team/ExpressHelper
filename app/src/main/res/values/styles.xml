@@ -12,9 +12,9 @@
 	</style>
 
 	<style name="BaseAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-		<item name="colorPrimary">@color/pink_500</item>
-		<item name="colorPrimaryDark">@color/pink_800</item>
-		<item name="colorAccent">@color/pink_300</item>
+		<item name="colorPrimary">@color/indigo_500</item>
+		<item name="colorPrimaryDark">@color/indigo_800</item>
+		<item name="colorAccent">@color/indigo_400</item>
 	</style>
 
 	<style name="AppTheme.NoActionBar" parent="@style/AppTheme">
@@ -25,6 +25,11 @@
 	<style name="AppTheme.NoActionBar.Translucent" parent="@style/AppTheme.Translucent">
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>
+	</style>
+
+	<style name="AppTheme.MaterialViewPager" parent="AppTheme">
+		<item name="colorControlNormal">@android:color/white</item>
+		<item name="android:textColorPrimary">@android:color/white</item>
 	</style>
 
 </resources>

@@ -40,6 +40,14 @@ public abstract class MyRecyclerViewAdapter<VH extends MyRecyclerViewAdapter.Cli
 		this.itemLongClickListener = listener;
 	}
 
+	public OnItemClickListener getOnItemClickListener() {
+		return this.itemClickListener;
+	}
+
+	public OnItemLongClickListener getOnItemLongClickListener() {
+		return this.itemLongClickListener;
+	}
+
 	public void bindContext(Context context) {
 		this.context = context;
 	}

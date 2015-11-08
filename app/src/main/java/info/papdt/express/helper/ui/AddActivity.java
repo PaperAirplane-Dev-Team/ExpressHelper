@@ -42,8 +42,6 @@ public class AddActivity extends AbsActivity {
 	public static final String TAG = "AddActivity";
 
 	public static final String TRANSITION_NAME_FAB = "fab";
-	
-	//918108247993
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -190,7 +188,7 @@ public class AddActivity extends AbsActivity {
 			String companyCode = src[0];
 			String mailNumber = src[1];
 
-			ExpressDatabase db = new ExpressDatabase(getApplicationContext());
+			ExpressDatabase db = ExpressDatabase.getInstance(getApplicationContext());
 			db.init();
 			if (db.findExpress(companyCode, mailNumber) != -1) {
 				return FLAG_HAS_BEEN_EXIST;

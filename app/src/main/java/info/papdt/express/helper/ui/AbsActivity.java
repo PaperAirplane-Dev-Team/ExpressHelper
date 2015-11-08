@@ -26,13 +26,17 @@ public abstract class AbsActivity extends SwipeBackActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		this.onCreate(savedInstanceState, true);
+	}
+
+	protected void onCreate(Bundle savedInstanceState, boolean useTranslucentStatusBar) {
 		/** Initialize Settings */
 		mSets = Settings.getInstance(getApplicationContext());
+		statusBarHeight = Utility.getStatusBarHeight(getApplicationContext());
 
 		/** Set up translucent status bar */
-		if (Build.VERSION.SDK_INT >= 19 && !Utility.isChrome()) {
+		if (Build.VERSION.SDK_INT >= 19 && !Utility.isChrome() && useTranslucentStatusBar) {
 			getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-			statusBarHeight = Utility.getStatusBarHeight(getApplicationContext());
 		}
 
 		if (Build.VERSION.SDK_INT >= 21) {

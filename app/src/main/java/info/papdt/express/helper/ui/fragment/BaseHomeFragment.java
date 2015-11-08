@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
 
 import org.json.JSONException;
 
@@ -29,6 +28,7 @@ import info.papdt.express.helper.support.Settings;
 import info.papdt.express.helper.ui.DetailsActivity;
 import info.papdt.express.helper.ui.MainActivity;
 import info.papdt.express.helper.ui.adapter.HomeCardRecyclerAdapter;
+import info.papdt.express.helper.ui.common.MultiSelectableRecyclerAdapter;
 import info.papdt.express.helper.ui.common.MyRecyclerViewAdapter;
 
 public abstract class BaseHomeFragment extends Fragment {
@@ -76,7 +76,7 @@ public abstract class BaseHomeFragment extends Fragment {
 			}
 		});
 
-		mDB = ((MainActivity) getActivity()).mExpressDB;
+		mDB = ExpressDatabase.getInstance(getActivity().getApplicationContext());
 		setUpAdapter();
 
 		return rootView;
@@ -112,8 +112,7 @@ public abstract class BaseHomeFragment extends Fragment {
 				.show();
 	}
 
-	protected void setUpAdapterListener() {
-		MyRecyclerViewAdapter adapter = (MyRecyclerViewAdapter) mRecyclerView.getAdapter();
+	protected void setUpAdapterListener(MultiSelectableRecyclerAdapter adapter) {
 		adapter.setOnItemClickListener(new MyRecyclerViewAdapter.OnItemClickListener() {
 			@Override
 			public void onItemClicked(int position) {
@@ -149,7 +148,22 @@ public abstract class BaseHomeFragment extends Fragment {
 				return true;
 			}
 		});
-		mRecyclerView.setAdapter(new RecyclerViewMaterialAdapter(adapter));
+		adapter.setOnSelectingStateCallback(new MultiSelectableRecyclerAdapter.OnSelectingStateCallback() {
+			@Override
+			public void onStart() {
+
+			}
+
+			@Override
+			public void onEnd() {
+
+			}
+		});
+	}
+
+	public void setListAdapter(MultiSelectableRecyclerAdapter adapter) {
+		mRecyclerView.setAdapter(adapter);
+		setUpAdapterListener(adapter);
 	}
 
 	public Handler mHandler = new Handler() {
@@ -177,8 +191,17 @@ public abstract class BaseHomeFragment extends Fragment {
 		@Override
 		protected ExpressDatabase doInBackground(Void... params) {
 			try {
-				((MainActivity) getActivity()).refreshDatabase(true);
-				return ((MainActivity) getActivity()).mExpressDB;
+				mDB.init();
+				mDB.pullNewDataFromNetwork(false);
+				try {
+					mDB.save();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				MainActivity.UIHandler.sendEmptyMessage(MainActivity.FLAG_UPDATE_PAGES);
+				return mDB;
 			} catch (Exception e) {
 				// failed
 				return null;

@@ -4,21 +4,17 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    
-}
-
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.0"
 
     defaultConfig {
         minSdkVersion 7
-        targetSdkVersion 21
+        targetSdkVersion 23
     }
 }
 
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:22.+'
+    compile 'com.android.support:appcompat-v7:23.1.0'
 }

@@ -1,5 +1,6 @@
 package info.papdt.express.helper.ui.common;
 
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -12,10 +13,10 @@ public abstract class MultiSelectableRecyclerAdapter<VH extends MultiSelectableR
 
 	public MultiSelectableRecyclerAdapter(boolean useAnimation) {
 		super(useAnimation);
-		selectStates = new boolean[getItemCount()];
 	}
 
 	public void startSelect() {
+		Log.i("TAG", "startSelect");
 		isSelecting = true;
 		selectStates = new boolean[getItemCount()];
 		this.notifyDataSetChanged();
@@ -41,6 +42,9 @@ public abstract class MultiSelectableRecyclerAdapter<VH extends MultiSelectableR
 	}
 
 	public boolean[] getSelectStates() {
+		if (selectStates == null) {
+			selectStates = new boolean[getItemCount()];
+		}
 		return selectStates;
 	}
 
@@ -53,11 +57,13 @@ public abstract class MultiSelectableRecyclerAdapter<VH extends MultiSelectableR
 
 	@Override
 	public void onBindViewHolder(final VH holder, final int position) {
+		super.onBindViewHolder(holder, position);
 		if (isSelecting) {
 			holder.getParentView().setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
 					if (isSelecting && selectStates [position] ? onItemUnselect(position) : onItemSelect(position)) {
+						Log.i("TAG", "no." + position + " is selected.");
 						holder.changeViewState(selectStates[position] = !selectStates[position],
 								holder.nowState != selectStates[position]);
 					}
@@ -65,7 +71,18 @@ public abstract class MultiSelectableRecyclerAdapter<VH extends MultiSelectableR
 			});
 			holder.getParentView().setOnLongClickListener(null);
 		} else {
-			super.onBindViewHolder(holder, position);
+			holder.getParentView().setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (isSelecting && selectStates[position] ? onItemUnselect(position) : onItemSelect(position)) {
+						Log.i("TAG", "no." + position + " is selected.");
+						holder.changeViewState(selectStates[position] = !selectStates[position],
+								holder.nowState != selectStates[position]);
+					} else {
+						getOnItemClickListener().onItemClicked(position);
+					}
+				}
+			});
 			holder.getParentView().setOnLongClickListener(new View.OnLongClickListener() {
 				@Override
 				public boolean onLongClick(View view) {
@@ -73,6 +90,7 @@ public abstract class MultiSelectableRecyclerAdapter<VH extends MultiSelectableR
 						startSelect();
 						holder.changeViewState(true, true);
 						selectStates[position] = true;
+						return true;
 					}
 					return false;
 				}
