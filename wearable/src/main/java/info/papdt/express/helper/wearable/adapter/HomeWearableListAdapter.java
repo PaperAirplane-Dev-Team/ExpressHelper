@@ -12,14 +12,14 @@ import com.amulyakhare.textdrawable.util.ColorGenerator;
 
 import info.papdt.express.helper.R;
 import info.papdt.express.helper.wearable.support.Express;
-import info.papdt.express.helper.wearable.support.ExpressDatabase;
-import info.papdt.express.helper.wearable.support.ExpressResult;
+import info.papdt.express.helper.wearable.support.ItemsKeeper;
+import info.papdt.express.helper.wearable.support.Item.Result;
 
 public class HomeWearableListAdapter extends WearableListView.Adapter {
 
-	private ExpressDatabase mDatabase;
+	private ItemsKeeper mDatabase;
 
-	public HomeWearableListAdapter(ExpressDatabase database) {
+	public HomeWearableListAdapter(ItemsKeeper database) {
 		this.mDatabase = database;
 	}
 
@@ -74,7 +74,7 @@ public class HomeWearableListAdapter extends WearableListView.Adapter {
 								)
 				);
 				try {
-					ExpressResult result = express.getData();
+					Item.Result result = express.getData();
 					mContentView.setText(result.data.get(result.data.size() - 1).get("context"));
 				} catch (Exception e) {
 					mContentView.setText(R.string.content_null);

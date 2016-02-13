@@ -20,7 +20,7 @@ import com.google.android.gms.wearable.WearableListenerService;
 
 import java.util.concurrent.TimeUnit;
 
-import info.papdt.express.helper.dao.ExpressDatabase;
+import info.papdt.expresshelper.common.model.ItemsKeeper;
 
 public class RefreshListener extends WearableListenerService
 		implements GoogleApiClient.ConnectionCallbacks,
@@ -101,10 +101,10 @@ public class RefreshListener extends WearableListenerService
 				Log.i(TAG, "Received ACTION_REFRESH");
 				sendDataClear();
 
-				ExpressDatabase database = ExpressDatabase.getInstance(getApplicationContext());
+				ItemsKeeper database = ItemsKeeper.getInstance(getApplicationContext());
 				for (int i = 0; i < database.size(); i++) {
 					Log.i(TAG, "sending " + i + "....");
-					sendDataAdd(database.getExpress(i).toJSONObject().toString());
+					sendDataAdd(database.getItem(i).toJsonStr());
 				}
 			}
 		}.start();

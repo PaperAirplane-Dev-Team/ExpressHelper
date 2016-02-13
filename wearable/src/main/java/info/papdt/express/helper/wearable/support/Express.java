@@ -10,7 +10,7 @@ public class Express {
 
 	private String companyCode, mailNumber, name;
 	private String jsonData = null, lastJsonData = null;
-	private int lastStatus = ExpressResult.STATUS_OTHER;
+	private int lastStatus = Item.Result.STATUS_OTHER;
 	public boolean shouldPush = true, needPush = true;
 
 	public Express(String companyCode, String mailNumber){
@@ -46,12 +46,12 @@ public class Express {
 		return lastStatus;
 	}
 
-	public ExpressResult getData() {
-		return ExpressResult.buildFromJSON(jsonData);
+	public Item.Result getData() {
+		return Item.Result.buildFromJSON(jsonData);
 	}
 
-	public ExpressResult getLastData() {
-		return ExpressResult.buildFromJSON(lastJsonData);
+	public Item.Result getLastData() {
+		return Item.Result.buildFromJSON(lastJsonData);
 	}
 
 	public String getCompanyCode(){

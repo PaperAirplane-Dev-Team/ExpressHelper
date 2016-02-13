@@ -1,16 +1,17 @@
 package info.papdt.express.helper.ui.fragment;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,27 +19,24 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
-import org.json.JSONException;
-
 import java.io.IOException;
 
 import info.papdt.express.helper.R;
-import info.papdt.express.helper.dao.ExpressDatabase;
-import info.papdt.express.helper.support.Settings;
+import info.papdt.expresshelper.common.Settings;
 import info.papdt.express.helper.ui.DetailsActivity;
 import info.papdt.express.helper.ui.MainActivity;
 import info.papdt.express.helper.ui.adapter.HomeCardRecyclerAdapter;
-import info.papdt.express.helper.ui.common.MultiSelectableRecyclerAdapter;
 import info.papdt.express.helper.ui.common.MyRecyclerViewAdapter;
+import info.papdt.expresshelper.common.model.ItemsKeeper;
 
 public abstract class BaseHomeFragment extends Fragment {
 
-	public ExpressDatabase mDB;
+	public ItemsKeeper mDB;
 
-	protected Settings mSets;
+	public Settings mSets;
 
-	protected SwipeRefreshLayout refreshLayout;
-	protected RecyclerView mRecyclerView;
+	private SwipeRefreshLayout refreshLayout;
+	private RecyclerView mRecyclerView;
 
 	protected Context context;
 
@@ -76,7 +74,7 @@ public abstract class BaseHomeFragment extends Fragment {
 			}
 		});
 
-		mDB = ExpressDatabase.getInstance(getActivity().getApplicationContext());
+		mDB = ItemsKeeper.getInstance(getActivity().getApplicationContext());
 		setUpAdapter();
 
 		return rootView;
@@ -97,71 +95,39 @@ public abstract class BaseHomeFragment extends Fragment {
 				.callback(new MaterialDialog.ButtonCallback() {
 					@Override
 					public void onPositive(MaterialDialog dialog) {
-						super.onPositive(dialog);
-						mDB.deleteExpress(realPosition);
+						mDB.deleteItem(realPosition);
 						try {
 							mDB.save();
-						} catch (JSONException e) {
-							e.printStackTrace();
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
 						mRecyclerView.getAdapter().notifyDataSetChanged();
+						dialog.dismiss();
 					}
 				})
 				.show();
 	}
 
-	protected void setUpAdapterListener(MultiSelectableRecyclerAdapter adapter) {
+	protected void setUpAdapterListener(MyRecyclerViewAdapter adapter) {
 		adapter.setOnItemClickListener(new MyRecyclerViewAdapter.OnItemClickListener() {
 			@Override
 			public void onItemClicked(int position) {
-				if (position == 0) return;
-
 				HomeCardRecyclerAdapter adapter =
 						(HomeCardRecyclerAdapter) mRecyclerView.getAdapter();
-				int realPosition = mDB.findExpress(
+				int realPosition = mDB.findItem(
 						adapter.getItem(position - 1).getCompanyCode(),
 						adapter.getItem(position - 1).getMailNumber()
 				);
 				Intent intent = new Intent(getActivity(), DetailsActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 				intent.putExtra("id", realPosition);
-				intent.putExtra("data", mDB.getExpress(realPosition).toJSONObject().toString());
+				intent.putExtra("data", mDB.getItem(realPosition).toJsonStr());
 				getActivity().startActivityForResult(intent, MainActivity.REQUEST_DETAILS);
-			}
-		});
-		adapter.setOnItemLongClickListener(new MyRecyclerViewAdapter.OnItemLongClickListener() {
-			@Override
-			public boolean onItemLongClicked(int position) {
-				if (position == 0) return false;
-
-				HomeCardRecyclerAdapter adapter =
-						(HomeCardRecyclerAdapter) mRecyclerView.getAdapter();
-				int realPosition = mDB.findExpress(
-						adapter.getItem(position - 1).getCompanyCode(),
-						adapter.getItem(position - 1).getMailNumber()
-				);
-
-				showDeleteDialog(realPosition);
-
-				return true;
-			}
-		});
-		adapter.setOnSelectingStateCallback(new MultiSelectableRecyclerAdapter.OnSelectingStateCallback() {
-			@Override
-			public void onStart() {
-
-			}
-
-			@Override
-			public void onEnd() {
-
 			}
 		});
 	}
 
-	public void setListAdapter(MultiSelectableRecyclerAdapter adapter) {
+	public void setListAdapter(MyRecyclerViewAdapter adapter) {
 		mRecyclerView.setAdapter(adapter);
 		setUpAdapterListener(adapter);
 	}
@@ -178,26 +144,26 @@ public abstract class BaseHomeFragment extends Fragment {
 					new RefreshTask().execute();
 					break;
 				case FLAG_REFRESH_ADAPTER_ONLY:
-					mDB.init();
-					setUpAdapter();
+					//mDB.init();
+					Log.i("tag", "b1");
+					//mRecyclerView.getAdapter().notifyDataSetChanged();
+					Log.i("tag", "b2");
 					break;
 			}
 		}
 
 	};
 
-	private class RefreshTask extends AsyncTask<Void, Void, ExpressDatabase> {
+	private class RefreshTask extends AsyncTask<Void, Void, ItemsKeeper> {
 
 		@Override
-		protected ExpressDatabase doInBackground(Void... params) {
+		protected ItemsKeeper doInBackground(Void... params) {
 			try {
 				mDB.init();
 				mDB.pullNewDataFromNetwork(false);
 				try {
 					mDB.save();
 				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 				MainActivity.UIHandler.sendEmptyMessage(MainActivity.FLAG_UPDATE_PAGES);
@@ -209,7 +175,7 @@ public abstract class BaseHomeFragment extends Fragment {
 		}
 
 		@Override
-		protected void onPostExecute(ExpressDatabase db) {
+		protected void onPostExecute(ItemsKeeper db) {
 			refreshLayout.setRefreshing(false);
 			if (db != null) {
 				mDB = db;

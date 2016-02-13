@@ -32,10 +32,9 @@ import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import info.papdt.express.helper.R;
-import info.papdt.express.helper.api.KuaiDi100Helper;
-import info.papdt.express.helper.dao.ExpressDatabase;
-import info.papdt.express.helper.support.Express;
-import info.papdt.express.helper.support.ExpressResult;
+import info.papdt.expresshelper.common.api.ACKDHelper;
+import info.papdt.expresshelper.common.model.Item;
+import info.papdt.expresshelper.common.model.ItemsKeeper;
 
 public class DetailsActivity extends AbsActivity {
 
@@ -46,9 +45,9 @@ public class DetailsActivity extends AbsActivity {
 	private ImageButton mButtonNumberVisible;
 
 	private int eid;
-	private Express express;
-	private ExpressResult cache;
-	private ExpressDatabase edb;
+	private Item express;
+	private Item.Result cache;
+	private ItemsKeeper edb;
 
 	private String phoneNumber;
 	private boolean hasPhoneNumber = true;
@@ -64,7 +63,7 @@ public class DetailsActivity extends AbsActivity {
 		eid = intent.getIntExtra("id", 0);
 		try {
 			JSONObject obj = new JSONObject(intent.getStringExtra("data"));
-			express = new Express(obj.getString("companyCode"),
+			express = new Item(obj.getString("companyCode"),
 					obj.getString("mailNumber"),
 					obj.getString("name"));
 			express.setData(obj.getString("cache"));
@@ -73,14 +72,14 @@ public class DetailsActivity extends AbsActivity {
 		}
 		cache = express.getData();
 
-		edb = new ExpressDatabase(getApplicationContext());
+		edb = ItemsKeeper.getInstance(getApplicationContext());
 
 		new Thread() {
 			@Override
 			public void run() {
 				try {
 					edb.init();
-					edb.getExpress(eid).needPush = false;
+					edb.getItem(eid).needPush = false;
 					edb.save();
 				} catch (Exception e) {
 
@@ -88,9 +87,9 @@ public class DetailsActivity extends AbsActivity {
 			}
 		}.start();
 
-		int company_id = KuaiDi100Helper.CompanyInfo.findCompanyByCode(express.getCompanyCode());
+		int company_id = ACKDHelper.CompanyInfo.findCompanyByCode(express.getCompanyCode());
 		if (company_id != -1) {
-			phoneNumber = KuaiDi100Helper.CompanyInfo.info.get(company_id).phone;
+			phoneNumber = ACKDHelper.CompanyInfo.info.get(company_id).phone;
 			hasPhoneNumber = phoneNumber != null && phoneNumber != "null" && !TextUtils.isEmpty(phoneNumber);
 		}
 
@@ -144,7 +143,7 @@ public class DetailsActivity extends AbsActivity {
 				public void run() {
 					try {
 						edb.init();
-						final boolean b = edb.getExpress(eid).shouldPush;
+						final boolean b = edb.getItem(eid).shouldPush;
 						runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
@@ -190,18 +189,16 @@ public class DetailsActivity extends AbsActivity {
 				@Override
 				public void run() {
 					edb.init();
-					edb.getExpress(eid).setName(mEditTextName.getText().toString().trim());
+					edb.getItem(eid).setName(mEditTextName.getText().toString().trim());
 					try {
 						edb.save();
 					} catch (IOException e) {
-						e.printStackTrace();
-					} catch (JSONException e) {
 						e.printStackTrace();
 					}
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							mActionBar.setTitle(edb.getExpress(eid).getName());
+							mActionBar.setTitle(edb.getItem(eid).getName());
 							setResult(MainActivity.RESULT_HAS_CHANGED);
 						}
 					});
@@ -249,7 +246,7 @@ public class DetailsActivity extends AbsActivity {
 				public void run() {
 					try {
 						edb.init();
-						edb.getExpress(eid).shouldPush = express.shouldPush;
+						edb.getItem(eid).shouldPush = express.shouldPush;
 						edb.save();
 						setResult(MainActivity.RESULT_HAS_CHANGED);
 					} catch (Exception e) {

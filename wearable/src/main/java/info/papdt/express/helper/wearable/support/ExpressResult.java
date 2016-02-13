@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ExpressResult {
+public class Item.Result {
 	
 	public int status, errCode, update, cache;
 	public String message, html, mailNo, expSpellName, expTextName, ord;
@@ -18,12 +18,12 @@ public class ExpressResult {
 	public static final int STATUS_FAILED = 0, STATUS_NORMAL = 1, STATUS_ON_THE_WAY = 2,
 		STATUS_DELIVERED = 3, STATUS_RETURNED = 4, STATUS_OTHER = 5;
 
-	public ExpressResult() {
+	public Item.Result() {
 			data = new ArrayList<>();
 		}
 
-	public static ExpressResult buildFromJSON(String jsonStr) {
-		ExpressResult result = new ExpressResult();
+	public static Item.Result buildFromJSON(String jsonStr) {
+		Item.Result result = new Item.Result();
 		try {
 			JSONObject person = new JSONObject(jsonStr);
 			JSONArray array = person.getJSONArray("data");

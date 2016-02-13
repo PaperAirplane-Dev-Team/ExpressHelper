@@ -2,11 +2,9 @@
 <resources>
 
 	<style name="AppTheme.Translucent" parent="@style/BaseAppTheme.Translucent">
-		<item name="android:statusBarColor">@android:color/transparent</item>
 	</style>
 
 	<style name="AppTheme" parent="@style/BaseAppTheme">
-		<item name="android:statusBarColor">@android:color/transparent</item>
 	</style>
 
 </resources>

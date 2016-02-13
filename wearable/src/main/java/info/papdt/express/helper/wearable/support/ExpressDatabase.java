@@ -10,26 +10,26 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ExpressDatabase {
+public class ItemsKeeper {
 
 	private ArrayList<Express> mExpressArray, array_ur, array_ok;
 	private Context context;
 
-	private final static String TAG = "ExpressDatabase";
+	private final static String TAG = "ItemsKeeper";
 
-	public ExpressDatabase(Context context) {
+	public ItemsKeeper(Context context) {
 		this.context = context;
 		mExpressArray = new ArrayList<>();
 	}
 
-	public static ExpressDatabase getInstance(Context context) {
-		ExpressDatabase db = new ExpressDatabase(context);
+	public static ItemsKeeper getInstance(Context context) {
+		ItemsKeeper db = new ItemsKeeper(context);
 		db.init();
 		return db;
 	}
 
 	public void addExpress(String jsonStr, String name) {
-		ExpressResult res = ExpressResult.buildFromJSON(jsonStr);
+		Item.Result res = Item.Result.buildFromJSON(jsonStr);
 		Express exp;
 		if (name != null) {
 			exp = new Express(res.expSpellName, res.mailNo, name);
@@ -77,7 +77,7 @@ public class ExpressDatabase {
 		array_ur = new ArrayList<>();
 		for (int i = 0; i < size(); i++) {
 			Express exp = getExpress(i);
-			ExpressResult cache = exp.getData();
+			Item.Result cache = exp.getData();
 			if (cache.getTrueStatus() == 3) {
 				array_ok.add(exp);
 			} else {

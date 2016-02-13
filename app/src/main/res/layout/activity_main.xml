@@ -37,7 +37,7 @@
 					app:layout_scrollFlags="scroll|enterAlways"
 					app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-				<android.support.design.widget.TabLayout
+				<info.papdt.express.helper.view.SlidingTabLayout
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:id="@+id/tabs"

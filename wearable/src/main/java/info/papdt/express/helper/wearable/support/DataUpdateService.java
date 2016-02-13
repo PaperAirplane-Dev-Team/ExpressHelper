@@ -30,7 +30,7 @@ public class DataUpdateService extends WearableListenerService
 
 	private String TAG = "Wearable";
 	private GoogleApiClient mGoogleApiClient;
-	private ExpressDatabase mDatabase;
+	private ItemsKeeper mDatabase;
 
 	@Override
 	public void onCreate() {
@@ -41,7 +41,7 @@ public class DataUpdateService extends WearableListenerService
 				.addConnectionCallbacks(this)
 				.addOnConnectionFailedListener(this)
 				.build();
-		mDatabase = ExpressDatabase.getInstance(getApplicationContext());
+		mDatabase = ItemsKeeper.getInstance(getApplicationContext());
 	}
 
 	@Override

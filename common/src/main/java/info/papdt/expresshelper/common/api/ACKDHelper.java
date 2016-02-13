@@ -1,6 +1,6 @@
-package info.papdt.express.helper.api;
+package info.papdt.expresshelper.common.api;
 
-import android.util.*;
+import android.util.Log;
 
 import com.spreada.utils.chinese.ZHConverter;
 
@@ -9,20 +9,19 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
-import info.papdt.express.helper.api.secret.KuaiDi100;
-import info.papdt.express.helper.support.*;
-import org.json.*;
-import java.util.*;
+import java.util.ArrayList;
 
-public class KuaiDi100Helper {
+import info.papdt.expresshelper.common.api.secret.ACKD;
+
+public class ACKDHelper {
 	
 	public static String myid = "104262", mysecret = "2ac58b166085aefdc9c93a3a69010e87";
 	public static String xfid = "109066", xfsecret = "b1726be0ec9c6a1abe60e3d71ef72603";
-	public static String smid = KuaiDi100.SKINME_API_ID, smsecret = KuaiDi100.SKINME_API_SECRET;
+	public static String smid = ACKD.SKINME_API_ID, smsecret = ACKD.SKINME_API_SECRET;
 	public static String e0id = "110229", e0secret = "cedbdd77d5a5a737b09f42ec0ccbbbda";
 	// public static String smid = "", smsecret = "";
 
-	private static final String TAG = "KuaiDi100Helper";
+	private static final String TAG = "ACKDHelper";
 
 	public static String getRequestUrl(String id, String secret, String com,
 									  String number, String encode) {
@@ -35,51 +34,6 @@ public class KuaiDi100Helper {
 						 + "&ord=asc");
 		Log.i(TAG, "Request URL:" + resultUrl);
 		return resultUrl.toString();
-	}
-	
-	public static ExpressResult buildDataFromResultStr(String jsonStr) {
-		ExpressResult result = new ExpressResult();
-		try {
-			JSONObject person = new JSONObject(jsonStr);
-			JSONArray array = person.getJSONArray("data");
-
-			String json2;
-			Map<String, String> map;
-
-			result.status = person.getInt("status");
-			result.errCode = person.getInt("errCode");
-			result.message = person.getString("message");
-			result.html = person.getString("html");
-			result.mailNo = person.getString("mailNo");
-			result.expSpellName = person.getString("expSpellName");
-			result.expTextName = person.getString("expTextName");
-			result.update = person.getInt("update");
-			result.cache = person.getInt("cache");
-			result.ord = person.getString("ord");
-
-			for (int i = 0; i < array.length(); i++) {
-				map = new HashMap<>();
-				json2 = array.get(i).toString();
-				JSONTokener jsonParser2 = new JSONTokener(json2);
-				JSONObject person2 = (JSONObject) jsonParser2.nextValue();
-				map.put("time", person2.getString("time"));
-				map.put("context", person2.getString("context"));
-				if (!person2.getString("context").contains("官网")) {
-					result.data.add(map);
-				}
-			}
-
-		} catch (JSONException e) {
-			e.printStackTrace();
-			result.status = 0;
-			result.message = "JSON String token error!";
-			return result;
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-			result.status = 0;
-			result.message = "Unknown error!";
-		}
-		return result;
 	}
 
 	public static ArrayList<CompanyInfo.Company> searchCompany(String keyword) {

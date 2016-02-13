@@ -14,8 +14,9 @@ import com.afollestad.materialdialogs.prefs.MaterialListPreference;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import info.papdt.express.helper.R;
-import info.papdt.express.helper.support.Settings;
-import info.papdt.express.helper.support.Utility;
+import info.papdt.express.helper.support.AppUtility;
+import info.papdt.expresshelper.common.Settings;
+import info.papdt.expresshelper.common.Utility;
 import info.papdt.express.helper.ui.SettingsActivity;
 
 public class SettingsMain extends PreferenceFragment implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
@@ -208,7 +209,7 @@ public class SettingsMain extends PreferenceFragment implements Preference.OnPre
 				if (values[index].equals(newValue)) break;
 			}
 			pref_notification_interval.setSummary(getResources().getStringArray(R.array.notification_interval)[index]);
-			Utility.restartServices(getActivity().getApplicationContext());
+			AppUtility.restartServices(getActivity().getApplicationContext());
 			return true;
 		}
 		if (pref == pref_swipe_back) {

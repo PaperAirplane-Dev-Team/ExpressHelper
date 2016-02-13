@@ -29,7 +29,7 @@ import info.papdt.express.helper.R;
 import info.papdt.express.helper.wearable.adapter.HomeWearableListAdapter;
 import info.papdt.express.helper.wearable.support.Constants;
 import info.papdt.express.helper.wearable.support.Express;
-import info.papdt.express.helper.wearable.support.ExpressDatabase;
+import info.papdt.express.helper.wearable.support.ItemsKeeper;
 
 public class MainActivity extends Activity
 		implements WatchViewStub.OnLayoutInflatedListener,
@@ -43,7 +43,7 @@ public class MainActivity extends Activity
 	private SwipeRefreshLayout mSwipeRefreshLayout;
 	private TextView mDebugText;
 
-	private ExpressDatabase mDatabase;
+	private ItemsKeeper mDatabase;
 	private HomeWearableListAdapter mAdapter;
 
 	private GoogleApiClient mGoogleApiClient;
@@ -63,7 +63,7 @@ public class MainActivity extends Activity
 				.addOnConnectionFailedListener(this)
 				.build();
 
-		mDatabase = ExpressDatabase.getInstance(getApplicationContext());
+		mDatabase = ItemsKeeper.getInstance(getApplicationContext());
 
 		mViewStub = (WatchViewStub) findViewById(R.id.watch_view_stub);
 		mViewStub.setOnLayoutInflatedListener(this);

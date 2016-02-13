@@ -18,10 +18,10 @@ import com.quinny898.library.persistentsearch.SearchBox;
 import java.util.ArrayList;
 
 import info.papdt.express.helper.R;
-import info.papdt.express.helper.api.KuaiDi100Helper;
-import info.papdt.express.helper.support.Utility;
+import info.papdt.expresshelper.common.Utility;
 import info.papdt.express.helper.ui.adapter.CompanyListRecyclerAdapter;
 import info.papdt.express.helper.ui.common.MyRecyclerViewAdapter;
+import info.papdt.expresshelper.common.api.ACKDHelper;
 
 public class CompanySelectActivity extends AbsActivity {
 
@@ -117,19 +117,19 @@ public class CompanySelectActivity extends AbsActivity {
 		mActivity.startActivityForResult(intent, REQUEST_CODE_SELECT);
 	}
 
-	public class SearchCompanyTask extends AsyncTask<String, Void, ArrayList<KuaiDi100Helper.CompanyInfo.Company>> {
+	public class SearchCompanyTask extends AsyncTask<String, Void, ArrayList<ACKDHelper.CompanyInfo.Company>> {
 
 		@Override
-		protected ArrayList<KuaiDi100Helper.CompanyInfo.Company> doInBackground(String... params) {
+		protected ArrayList<ACKDHelper.CompanyInfo.Company> doInBackground(String... params) {
 			if (params.length > 0) {
-				return KuaiDi100Helper.searchCompany(params [0]);
+				return ACKDHelper.searchCompany(params [0]);
 			} else {
-				return KuaiDi100Helper.CompanyInfo.info;
+				return ACKDHelper.CompanyInfo.info;
 			}
 		}
 
 		@Override
-		protected void onPostExecute(ArrayList<KuaiDi100Helper.CompanyInfo.Company> result) {
+		protected void onPostExecute(ArrayList<ACKDHelper.CompanyInfo.Company> result) {
 			if (result != null) {
 				mCompanyListAdapter = new CompanyListRecyclerAdapter(result);
 				mRecyclerView.setAdapter(mCompanyListAdapter);

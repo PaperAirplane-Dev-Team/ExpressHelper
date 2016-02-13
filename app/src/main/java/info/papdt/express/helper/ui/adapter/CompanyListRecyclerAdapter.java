@@ -9,14 +9,14 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import info.papdt.express.helper.R;
-import info.papdt.express.helper.api.KuaiDi100Helper;
 import info.papdt.express.helper.ui.common.MyRecyclerViewAdapter;
+import info.papdt.expresshelper.common.api.ACKDHelper;
 
 public class CompanyListRecyclerAdapter extends MyRecyclerViewAdapter<CompanyListRecyclerAdapter.ViewHolder> {
 
-	private ArrayList<KuaiDi100Helper.CompanyInfo.Company> data;
+	private ArrayList<ACKDHelper.CompanyInfo.Company> data;
 
-	public CompanyListRecyclerAdapter(ArrayList<KuaiDi100Helper.CompanyInfo.Company> data) {
+	public CompanyListRecyclerAdapter(ArrayList<ACKDHelper.CompanyInfo.Company> data) {
 		super(false);
 		this.data = data;
 	}
@@ -53,7 +53,7 @@ public class CompanyListRecyclerAdapter extends MyRecyclerViewAdapter<CompanyLis
 		return data.size();
 	}
 
-	public KuaiDi100Helper.CompanyInfo.Company getItem(int pos) {
+	public ACKDHelper.CompanyInfo.Company getItem(int pos) {
 		return data.get(pos);
 	}
 

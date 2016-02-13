@@ -6,12 +6,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.util.Log;
 
-/**
- *
- * @author PeterCxy
- *
- */
-
 public class ConnectivityReceiver extends BroadcastReceiver {
 
 	public static boolean isWIFI = true;
@@ -20,10 +14,10 @@ public class ConnectivityReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		if (readNetworkState(context)) {
 			Log.i("ConnectivityReceiver", "Start ReminderService.");
-			Utility.startServices(context);
+			AppUtility.startServices(context);
 		} else {
 			Log.i("ConnectivityReceiver", "Stop ReminderService.");
-			Utility.stopServices(context);
+			AppUtility.stopServices(context);
 		}
 	}
 

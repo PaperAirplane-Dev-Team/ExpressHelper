@@ -18,15 +18,15 @@ import com.melnykov.fab.FloatingActionButton;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.HashMap;
-import java.util.Random;
 
 import info.papdt.express.helper.R;
-import info.papdt.express.helper.api.KuaiDi100Helper;
-import info.papdt.express.helper.dao.ExpressDatabase;
-import info.papdt.express.helper.support.ExpressResult;
-import info.papdt.express.helper.support.HttpUtils;
-import info.papdt.express.helper.support.Settings;
-import info.papdt.express.helper.support.Utility;
+import info.papdt.expresshelper.common.HttpUtils;
+import info.papdt.expresshelper.common.Settings;
+import info.papdt.expresshelper.common.Utility;
+import info.papdt.expresshelper.common.api.ACKDHelper;
+import info.papdt.expresshelper.common.model.Item;
+import info.papdt.expresshelper.common.model.ItemsKeeper;
+import info.papdt.expresshelper.common.model.Message;
 
 public class AddActivity extends AbsActivity {
 
@@ -90,7 +90,7 @@ public class AddActivity extends AbsActivity {
 		switch (requestCode) {
 			case CompanySelectActivity.REQUEST_CODE_SELECT:
 				if (resultCode == CompanySelectActivity.RESULT_SELECTED) {
-					mNow = KuaiDi100Helper.CompanyInfo.findCompanyByCode(intent.getStringExtra("company_code"));
+					mNow = ACKDHelper.CompanyInfo.findCompanyByCode(intent.getStringExtra("company_code"));
 					setCompanyNameText();
 				}
 				break;
@@ -104,7 +104,7 @@ public class AddActivity extends AbsActivity {
 	}
 
 	private void setCompanyNameText() {
-		mCompanyNameText.setText(KuaiDi100Helper.CompanyInfo.names [mNow]);
+		mCompanyNameText.setText(ACKDHelper.CompanyInfo.names [mNow]);
 	}
 
 	private void postData() {
@@ -126,15 +126,15 @@ public class AddActivity extends AbsActivity {
 		}
 
 		new PostApiTask().execute(
-				KuaiDi100Helper.CompanyInfo.info.get(mNow).code,
+				ACKDHelper.CompanyInfo.info.get(mNow).code,
 				mEditTextSerial.getText().toString()
 		);
 	}
 	
 	private void receiveData(String result, String name) {
 		if (!mForceAddCheckBox.isChecked()) {
-			ExpressResult er = ExpressResult.buildFromJSON(result);
-			if (er.getTrueStatus() == ExpressResult.STATUS_FAILED) {
+			Item.Result er = Item.Result.buildFromJSON(result);
+			if (er.getTrueStatus() == Item.Result.STATUS_FAILED) {
 				Toast.makeText(
 						getApplicationContext(),
 						getResources().getStringArray(R.array.errCode_toast) [er.errCode],
@@ -184,13 +184,12 @@ public class AddActivity extends AbsActivity {
 
 		@Override
 		protected String doInBackground(String... src) {
-			String[] result = new String[1];
 			String companyCode = src[0];
 			String mailNumber = src[1];
 
-			ExpressDatabase db = ExpressDatabase.getInstance(getApplicationContext());
+			ItemsKeeper db = ItemsKeeper.getInstance(getApplicationContext());
 			db.init();
-			if (db.findExpress(companyCode, mailNumber) != -1) {
+			if (db.findItem(companyCode, mailNumber) != -1) {
 				return FLAG_HAS_BEEN_EXIST;
 			}
 
@@ -198,10 +197,18 @@ public class AddActivity extends AbsActivity {
 			String app_id = token.get("id");
 			String secret = token.get("secret");
 
-			int resultCode = HttpUtils.get(KuaiDi100Helper.getRequestUrl(app_id, secret, companyCode, mailNumber, "utf8"), result);
-			switch (resultCode) {
+			Message<String> msg = HttpUtils.getString(
+					ACKDHelper.getRequestUrl(
+							app_id,
+							secret,
+							companyCode,
+							mailNumber,
+							"utf8"
+					)
+			);
+			switch (msg.getCode()) {
 				case HttpUtils.CODE_OKAY:
-					return result[0];
+					return msg.getObject();
 				case HttpUtils.CODE_NONE_200:
 				case HttpUtils.CODE_NETWORK_ERROR:
 					return FLAG_NETWORK_ERROR;

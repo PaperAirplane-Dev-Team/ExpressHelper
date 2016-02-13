@@ -11,14 +11,15 @@ import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
-import org.json.JSONException;
-
 import java.io.IOException;
 import java.util.Calendar;
 
 import info.papdt.express.helper.R;
-import info.papdt.express.helper.dao.ExpressDatabase;
 import info.papdt.express.helper.ui.DetailsActivity;
+import info.papdt.expresshelper.common.Settings;
+import info.papdt.expresshelper.common.Utility;
+import info.papdt.expresshelper.common.model.Item;
+import info.papdt.expresshelper.common.model.ItemsKeeper;
 
 @SuppressWarnings("ALL")
 public class ReminderService extends IntentService {
@@ -27,7 +28,7 @@ public class ReminderService extends IntentService {
 
 	private static final int ID = 100000;
 
-	private Notification produceNotifications(int position, Express exp) {
+	private Notification produceNotifications(int position, Item exp) {
 		if (exp != null) {
 			int defaults = parseDefaults(getApplicationContext());
 
@@ -36,15 +37,15 @@ public class ReminderService extends IntentService {
 			Intent i = new Intent(getApplicationContext(), DetailsActivity.class);
 			i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			i.putExtra("id", position);
-			i.putExtra("data", exp.toJSONObject().toString());
+			i.putExtra("data", exp.toJsonStr());
 
 			pi = PendingIntent.getActivity(getApplicationContext(), position, i, PendingIntent.FLAG_UPDATE_CURRENT);
 
 			String title = exp.getName();
-			if (exp.getData().getTrueStatus() == ExpressResult.STATUS_DELIVERED) {
+			if (exp.getData().getTrueStatus() == Item.Result.STATUS_DELIVERED) {
 				title += getString(R.string.notification_delivered);
 			} else {
-				if (exp.getData().getTrueStatus() == ExpressResult.STATUS_ON_THE_WAY) {
+				if (exp.getData().getTrueStatus() == Item.Result.STATUS_ON_THE_WAY) {
 					title += getString(R.string.notification_on_the_way);
 				} else {
 					title += getString(R.string.notification_new_message);
@@ -53,10 +54,10 @@ public class ReminderService extends IntentService {
 
 			int smallIcon;
 			switch (exp.getData().getTrueStatus()) {
-				case ExpressResult.STATUS_DELIVERED:
+				case Item.Result.STATUS_DELIVERED:
 					smallIcon = R.drawable.ic_done_white_24dp;
 					break;
-				case ExpressResult.STATUS_ON_THE_WAY:
+				case Item.Result.STATUS_ON_THE_WAY:
 					smallIcon = R.drawable.ic_assignment_turned_in_white_24dp;
 					break;
 				default:
@@ -101,21 +102,19 @@ public class ReminderService extends IntentService {
 
 		NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-		ExpressDatabase db = ExpressDatabase.getInstance(getApplicationContext());
+		ItemsKeeper db = ItemsKeeper.getInstance(getApplicationContext());
 
 		db.pullNewDataFromNetwork(false);
 		try {
 			db.save();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (JSONException e) {
-			e.printStackTrace();
 		}
 
 		for (int i = 0; i < db.size(); i++) {
-			Express exp = db.getExpress(i);
-			if (exp.getData().getTrueStatus() != ExpressResult.STATUS_FAILED && exp.needPush && exp.shouldPush) {
-				if (exp.getLastStatus() == ExpressResult.STATUS_DELIVERED) continue;
+			Item exp = db.getItem(i);
+			if (exp.getData().getTrueStatus() != Item.Result.STATUS_FAILED && !exp.needPush && exp.shouldPush) {
+				if (exp.getLastStatus() == Item.Result.STATUS_DELIVERED) continue;
 				Notification n = produceNotifications(i, exp);
 				if (exp != null) {
 					nm.notify(i + 20000, n);
@@ -127,8 +126,6 @@ public class ReminderService extends IntentService {
 		try {
 			db.save();
 		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}

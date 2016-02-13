@@ -2,46 +2,35 @@ package info.papdt.express.helper.ui.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import info.papdt.express.helper.R;
-import info.papdt.express.helper.dao.ExpressDatabase;
-import info.papdt.express.helper.support.Express;
-import info.papdt.express.helper.support.ExpressResult;
-import info.papdt.express.helper.support.Settings;
-import info.papdt.express.helper.ui.common.MultiSelectableRecyclerAdapter;
+import info.papdt.express.helper.ui.common.MyRecyclerViewAdapter;
+import info.papdt.expresshelper.common.Settings;
+import info.papdt.expresshelper.common.model.Item;
+import info.papdt.expresshelper.common.model.ItemsKeeper;
 
-public class HomeCardRecyclerAdapter extends MultiSelectableRecyclerAdapter<HomeCardRecyclerAdapter.ViewHolder> {
+public class HomeCardRecyclerAdapter extends MyRecyclerViewAdapter<HomeCardRecyclerAdapter.ViewHolder> {
 
-	private ExpressDatabase db;
+	private ItemsKeeper db;
 	private int type;
 
 	private int[] defaultColors;
 
 	public static final int TYPE_ALL = 0, TYPE_UNRECEIVED = 1, TYPE_RECEIVED = 2;
 
-	public HomeCardRecyclerAdapter(Context context, ExpressDatabase db, int type) {
-		super(!Settings.getInstance(context).getBoolean(Settings.KEY_DISABLE_ANIMATION, false));
+	public HomeCardRecyclerAdapter(Context context, ItemsKeeper db, int type) {
+		super(false);
 		this.db = db;
 		this.defaultColors = context.getResources().getIntArray(R.array.statusColor);
 		this.type = type;
-	}
-
-	@Override
-	public boolean onItemSelect(int position) {
-		return position < getExpressCount();
-	}
-
-	@Override
-	public boolean onItemUnselect(int position) {
-		return position < getExpressCount();
 	}
 
 	@Override
@@ -55,8 +44,8 @@ public class HomeCardRecyclerAdapter extends MultiSelectableRecyclerAdapter<Home
 	public void onBindViewHolder(ViewHolder holder, final int position) {
 		super.onBindViewHolder(holder, position);
 
-		Express item = getItem(position);
-		ExpressResult cache = item.getData();
+		Item item = getItem(position);
+		Item.Result cache = item.getData();
 
 		ColorDrawable drawable = new ColorDrawable(defaultColors[cache.getTrueStatus()]);
 		holder.iv_round.setImageDrawable(drawable);
@@ -73,8 +62,6 @@ public class HomeCardRecyclerAdapter extends MultiSelectableRecyclerAdapter<Home
 			holder.tv_desp.setText(R.string.list_error_cannot_get_latest_status);
 			holder.tv_time.setVisibility(View.GONE);
 		}
-
-		holder.changeViewState(getSelectStates()[position], false);
 	}
 
 	public int getExpressCount() {
@@ -93,9 +80,9 @@ public class HomeCardRecyclerAdapter extends MultiSelectableRecyclerAdapter<Home
 		return getExpressCount();
 	}
 
-	public Express getItem(int i) {
+	public Item getItem(int i) {
 		if (type == TYPE_ALL) {
-			return db.getExpress(getExpressCount() - i - 1);
+			return db.getItem(getExpressCount() - i - 1);
 		} else if (type == TYPE_UNRECEIVED) {
 			return db.getUnreceivedArray().get(getExpressCount() - i - 1);
 		} else if (type == TYPE_RECEIVED) {
@@ -104,7 +91,7 @@ public class HomeCardRecyclerAdapter extends MultiSelectableRecyclerAdapter<Home
 		return null;
 	}
 
-	public class ViewHolder extends MultiSelectableRecyclerAdapter.SelectableViewHolder {
+	public class ViewHolder extends MyRecyclerViewAdapter.ClickableViewHolder {
 
 		public CircleImageView iv_round;
 		public TextView tv_title, tv_desp, tv_time, tv_center_round;
@@ -118,20 +105,6 @@ public class HomeCardRecyclerAdapter extends MultiSelectableRecyclerAdapter<Home
 			this.tv_time = (TextView) itemView.findViewById(R.id.tv_time);
 			this.tv_center_round = (TextView) itemView.findViewById(R.id.center_text);
 			this.mSelectStateView = itemView.findViewById(R.id.selected_state);
-		}
-
-		@Override
-		public void changeViewState(boolean isSelected, boolean animate) {
-			if (animate) {
-				this.mSelectStateView.animate()
-						.alpha(isSelected ? 1f : 0f)
-						.scaleX(isSelected ? 1f : 0f)
-						.scaleY(isSelected ? 1f : 0f)
-						.setInterpolator(new OvershootInterpolator())
-						.start();
-			} else {
-				this.mSelectStateView.setAlpha(isSelected ? 1f : 0f);
-			}
 		}
 
 	}

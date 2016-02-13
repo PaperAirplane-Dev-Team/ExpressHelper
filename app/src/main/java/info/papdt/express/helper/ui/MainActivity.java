@@ -1,19 +1,21 @@
 package info.papdt.express.helper.ui;
 
+import android.app.Fragment;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,29 +28,28 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.melnykov.fab.FloatingActionButton;
 import com.quinny898.library.persistentsearch.SearchBox;
 
-import org.json.JSONException;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
 import info.papdt.express.helper.R;
-import info.papdt.express.helper.api.KuaiDi100Helper;
-import info.papdt.express.helper.dao.ExpressDatabase;
 import info.papdt.express.helper.support.CrashHandler;
-import info.papdt.express.helper.support.Settings;
-import info.papdt.express.helper.support.Utility;
+import info.papdt.express.helper.view.SlidingTabLayout;
+import info.papdt.expresshelper.common.Settings;
+import info.papdt.expresshelper.common.Utility;
 import info.papdt.express.helper.support.wearable.Constants;
 import info.papdt.express.helper.support.wearable.RefreshListener;
 import info.papdt.express.helper.ui.adapter.CompanyListRecyclerAdapter;
 import info.papdt.express.helper.ui.adapter.HomePagerAdapter;
 import info.papdt.express.helper.ui.common.MyRecyclerViewAdapter;
 import info.papdt.express.helper.ui.fragment.BaseHomeFragment;
+import info.papdt.expresshelper.common.api.ACKDHelper;
+import info.papdt.expresshelper.common.model.ItemsKeeper;
 
 public class MainActivity extends AbsActivity {
 
-	private ExpressDatabase mExpressDB;
+	private ItemsKeeper mExpressDB;
 
-	private TabLayout mTabLayout;
+	private SlidingTabLayout mTabLayout;
 	private ViewPager mPager;
 	private static HomePagerAdapter mPagerAdapter;
 	private FloatingActionButton mFAB;
@@ -76,14 +77,14 @@ public class MainActivity extends AbsActivity {
 		setSwipeBackEnable(false);
 
 		/** Init Database */
-		mExpressDB = ExpressDatabase.getInstance(getApplicationContext());
+		mExpressDB = ItemsKeeper.getInstance(getApplicationContext());
 		refreshDatabase(false);
 
 		/** Init ViewPager */
-		mPagerAdapter = new HomePagerAdapter(getApplicationContext(), getSupportFragmentManager());
+		mPagerAdapter = new HomePagerAdapter(getApplicationContext(), getFragmentManager());
 		mPager.setAdapter(mPagerAdapter);
 		mPager.setCurrentItem(selectedTab, false);
-		mTabLayout.setupWithViewPager(mPager);
+		mTabLayout.setViewPager(mPager);
 
 		Intent intent = new Intent(this, RefreshListener.class);
 		startService(intent);
@@ -97,13 +98,12 @@ public class MainActivity extends AbsActivity {
 
 	public void refreshDatabase(boolean pullNewData) {
 		mExpressDB.init();
+		Log.i("tag", "1");
 		if (pullNewData) {
 			mExpressDB.pullNewDataFromNetwork(false);
 			try {
 				mExpressDB.save();
 			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		}
@@ -112,8 +112,13 @@ public class MainActivity extends AbsActivity {
 
 	@Override
 	protected void setUpViews() {
-		View statusHeaderView1 = findViewById(R.id.statusHeaderView1);
-		statusHeaderView1.getLayoutParams().height = statusBarHeight;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			View statusHeaderView = findViewById(R.id.statusHeaderView);
+			statusHeaderView.setVisibility(View.GONE);
+		} else {
+			View statusHeaderView1 = findViewById(R.id.statusHeaderView1);
+			statusHeaderView1.getLayoutParams().height = statusBarHeight;
+		}
 
 		mToolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(mToolbar);
@@ -131,7 +136,21 @@ public class MainActivity extends AbsActivity {
 		mCompanyList.setHasFixedSize(true);
 
 		mPager = (ViewPager) findViewById(R.id.pager);
-		mTabLayout = (TabLayout) findViewById(R.id.tabs);
+		mTabLayout = (SlidingTabLayout) findViewById(R.id.tabs);
+		mTabLayout.setCustomTabView(R.layout.tab_indicator, android.R.id.text1);
+		mTabLayout.setSelectedIndicatorColors(getResources().getColor(android.R.color.white));
+		mTabLayout.setDistributeEvenly(true);
+		mTabLayout.setOnTabItemClickListener(new SlidingTabLayout.OnTabItemClickListener() {
+			@Override
+			public void onTabItemClick(int pos) {
+				BaseHomeFragment fragment = (BaseHomeFragment) mPagerAdapter.getItem(pos);
+				try {
+					fragment.scrollToTopItem();
+				} catch (Exception e) {
+
+				}
+			}
+		});
 
 		/** Set up FloatingActionButton */
 		mFAB = (FloatingActionButton) findViewById(R.id.fab);
@@ -235,12 +254,10 @@ public class MainActivity extends AbsActivity {
 				if (resultCode == RESULT_ADD_FINISH) {
 					String jsonStr = intent.getStringExtra("result");
 					String name = intent.getStringExtra("name");
-					mExpressDB.addExpress(jsonStr, name);
+					mExpressDB.addItem(jsonStr, name);
 					try {
 						mExpressDB.save();
 					} catch (IOException e) {
-						e.printStackTrace();
-					} catch (JSONException e) {
 						e.printStackTrace();
 					}
 					mPagerAdapter.notifyDataSetChanged();
@@ -260,8 +277,6 @@ public class MainActivity extends AbsActivity {
 		try {
 			mExpressDB.save();
 		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
@@ -303,7 +318,7 @@ public class MainActivity extends AbsActivity {
 			return true;
 		}
 		if (id == R.id.action_manual_refresh) {
-			Fragment fragment = mPagerAdapter.getItemAt(mPager.getCurrentItem());
+			Fragment fragment = mPagerAdapter.getItem(mPager.getCurrentItem());
 			if (fragment instanceof BaseHomeFragment) {
 				((BaseHomeFragment) fragment).mHandler.sendEmptyMessage(BaseHomeFragment.FLAG_REFRESH_LIST);
 			}
@@ -332,19 +347,19 @@ public class MainActivity extends AbsActivity {
 		}
 	}
 
-	public class SearchCompanyTask extends AsyncTask<String, Void, ArrayList<KuaiDi100Helper.CompanyInfo.Company>> {
+	public class SearchCompanyTask extends AsyncTask<String, Void, ArrayList<ACKDHelper.CompanyInfo.Company>> {
 
 		@Override
-		protected ArrayList<KuaiDi100Helper.CompanyInfo.Company> doInBackground(String... params) {
+		protected ArrayList<ACKDHelper.CompanyInfo.Company> doInBackground(String... params) {
 			if (params.length > 0) {
-				return KuaiDi100Helper.searchCompany(params [0]);
+				return ACKDHelper.searchCompany(params [0]);
 			} else {
-				return KuaiDi100Helper.CompanyInfo.info;
+				return ACKDHelper.CompanyInfo.info;
 			}
 		}
 
 		@Override
-		protected void onPostExecute(ArrayList<KuaiDi100Helper.CompanyInfo.Company> result) {
+		protected void onPostExecute(ArrayList<ACKDHelper.CompanyInfo.Company> result) {
 			if (result != null) {
 				mCompanyListAdapter = new CompanyListRecyclerAdapter(result);
 				mCompanyList.setAdapter(mCompanyListAdapter);
