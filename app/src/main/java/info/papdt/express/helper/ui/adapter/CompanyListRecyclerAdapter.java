@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import de.hdodenhof.circleimageview.CircleImageView;
 import info.papdt.express.helper.R;
 import info.papdt.express.helper.ui.common.MyRecyclerViewAdapter;
-import info.papdt.expresshelper.common.api.ACKDHelper;
+import info.papdt.express.helper.common.api.ACKDHelper;
 
 public class CompanyListRecyclerAdapter extends MyRecyclerViewAdapter<CompanyListRecyclerAdapter.ViewHolder> {
 

@@ -12,9 +12,11 @@
 	</style>
 
 	<style name="BaseAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-		<item name="colorPrimary">@color/indigo_500</item>
-		<item name="colorPrimaryDark">@color/indigo_800</item>
-		<item name="colorAccent">@color/indigo_400</item>
+		<item name="colorPrimary">@color/blue_600</item>
+		<item name="colorPrimaryDark">@color/blue_800</item>
+		<item name="colorAccent">@color/pink_400</item>
+		<item name="fab_colorNormal">@color/pink_500</item>
+		<item name="fab_colorPressed">@color/pink_400</item>
 	</style>
 
 	<style name="AppTheme.NoActionBar" parent="@style/AppTheme">
@@ -30,6 +32,11 @@
 	<style name="AppTheme.MaterialViewPager" parent="AppTheme">
 		<item name="colorControlNormal">@android:color/white</item>
 		<item name="android:textColorPrimary">@android:color/white</item>
+	</style>
+
+	<style name="menu_labels_style">
+		<item name="android:background">@drawable/fab_label_background</item>
+		<item name="android:textColor">@color/white</item>
 	</style>
 
 </resources>

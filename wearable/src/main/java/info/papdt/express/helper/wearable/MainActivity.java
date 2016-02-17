@@ -19,17 +19,15 @@ import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 
 import info.papdt.express.helper.R;
+import info.papdt.express.helper.common.model.Item;
+import info.papdt.express.helper.common.model.ItemsKeeper;
 import info.papdt.express.helper.wearable.adapter.HomeWearableListAdapter;
 import info.papdt.express.helper.wearable.support.Constants;
-import info.papdt.express.helper.wearable.support.Express;
-import info.papdt.express.helper.wearable.support.ItemsKeeper;
 
 public class MainActivity extends Activity
 		implements WatchViewStub.OnLayoutInflatedListener,
@@ -153,8 +151,6 @@ public class MainActivity extends Activity
 						mDatabase.save();
 					} catch (IOException e) {
 						e.printStackTrace();
-					} catch (JSONException e) {
-						e.printStackTrace();
 					}
 					mAdapter = new HomeWearableListAdapter(mDatabase);
 					runOnUiThread(new Runnable() {
@@ -168,20 +164,13 @@ public class MainActivity extends Activity
 					Log.i(TAG, "Received ACTION_ADD");
 					addDebugText("Received ACTION_ADD");
 					String data = dataMap.getString(Constants.EH_KEY_DATA);
+					mDatabase.addItem(new Gson().fromJson(data, Item.class));
 					try {
-						JSONObject jsonObject = new JSONObject(data);
-						mDatabase.addExpress(Express.buildFromJSONObject(jsonObject));
-						try {
-							mDatabase.save();
-						} catch (IOException e) {
-							e.printStackTrace();
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-						mAdapter.notifyDataSetChanged();
-					} catch (JSONException e) {
+						mDatabase.save();
+					} catch (IOException e) {
 						e.printStackTrace();
 					}
+					mAdapter.notifyDataSetChanged();
 				}
 			}
 		}

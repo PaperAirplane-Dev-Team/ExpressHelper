@@ -1,4 +1,4 @@
-package info.papdt.expresshelper.common.model;
+package info.papdt.express.helper.common.model;
 
 import android.content.Context;
 import android.util.Log;
@@ -9,9 +9,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import info.papdt.expresshelper.common.HttpUtils;
-import info.papdt.expresshelper.common.Utility;
-import info.papdt.expresshelper.common.api.ACKDHelper;
+import info.papdt.express.helper.common.HttpUtils;
+import info.papdt.express.helper.common.Utility;
+import info.papdt.express.helper.common.api.ACKDHelper;
 
 public class ItemsKeeper {
 
@@ -108,7 +108,7 @@ public class ItemsKeeper {
 		if (ok) return i; else return -1;
 	}
 
-	public void init(){
+	public void init() {
 		mItemArray = null;
 		String jsonData;
 		try {
@@ -128,10 +128,14 @@ public class ItemsKeeper {
 		calcItem();
 	}
 
+	public void clear() {
+		mItemArray = new ArrayList<>();
+	}
+
 	public void save() throws IOException{
-		Data data = new Data();
-		data.data = mItemArray;
-		Utility.saveFile(context, "data.json", new Gson().toJson(data));
+		Data d = new Data();
+		d.data = mItemArray;
+		Utility.saveFile(context, "data.json", new Gson().toJson(d));
 	}
 
 	public void pullNewDataFromNetwork(boolean refreshDelivered) {

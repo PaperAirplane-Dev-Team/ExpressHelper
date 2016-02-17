@@ -1,4 +1,4 @@
-package info.papdt.expresshelper.common.model;
+package info.papdt.express.helper.common.model;
 
 public class Message<OBJ> {
 

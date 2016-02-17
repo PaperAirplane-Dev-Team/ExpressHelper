@@ -1,4 +1,4 @@
-package com.amulyakhare.textdrawable;
+package info.papdt.express.helper.common.view;
 
 import android.graphics.*;
 import android.graphics.drawable.ShapeDrawable;

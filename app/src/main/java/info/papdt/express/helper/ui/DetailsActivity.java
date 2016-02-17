@@ -32,9 +32,9 @@ import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import info.papdt.express.helper.R;
-import info.papdt.expresshelper.common.api.ACKDHelper;
-import info.papdt.expresshelper.common.model.Item;
-import info.papdt.expresshelper.common.model.ItemsKeeper;
+import info.papdt.express.helper.common.api.ACKDHelper;
+import info.papdt.express.helper.common.model.Item;
+import info.papdt.express.helper.common.model.ItemsKeeper;
 
 public class DetailsActivity extends AbsActivity {
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">ExpressHelper</string>
+    <string name="app_name">Package Tracker</string>
     <string name="title_section_1">All</string>
     <string name="title_section_2">Pending</string>
     <string name="title_section_3">Delivered</string>
@@ -9,6 +9,9 @@
 	<string name="action_manual_refresh">Refresh</string>
 	<string name="toast_pull_to_refresh_tips">You can also refresh by pulling down the lists.</string>
 	<string name="action_add">Add express</string>
+
+    <string name="fab_add_input">Add package</string>
+    <string name="fab_add_scan">Scan code</string>
 
     <string-array name="title_sections">
         <item>@string/title_section_1</item>

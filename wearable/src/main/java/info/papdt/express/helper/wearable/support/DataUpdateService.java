@@ -17,11 +17,15 @@ import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+
+import info.papdt.express.helper.common.model.Item;
+import info.papdt.express.helper.common.model.ItemsKeeper;
 
 public class DataUpdateService extends WearableListenerService
 		implements GoogleApiClient.ConnectionCallbacks,
@@ -84,24 +88,15 @@ public class DataUpdateService extends WearableListenerService
 						mDatabase.save();
 					} catch (IOException e) {
 						e.printStackTrace();
-					} catch (JSONException e) {
-						e.printStackTrace();
 					}
 				}
 				if (action.equals(Constants.EH_ACTION_ADD)) {
 					Log.i(TAG, "Received ACTION_ADD");
 					String data = dataMap.getString(Constants.EH_KEY_DATA);
+					mDatabase.addItem(new Gson().fromJson(data, Item.class));
 					try {
-						JSONObject jsonObject = new JSONObject(data);
-						mDatabase.addExpress(Express.buildFromJSONObject(jsonObject));
-						try {
-							mDatabase.save();
-						} catch (IOException e) {
-							e.printStackTrace();
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-					} catch (JSONException e) {
+						mDatabase.save();
+					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				}

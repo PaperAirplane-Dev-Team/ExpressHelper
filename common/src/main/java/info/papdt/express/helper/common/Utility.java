@@ -1,4 +1,4 @@
-package info.papdt.expresshelper.common;
+package info.papdt.express.helper.common;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -14,7 +14,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Random;
 
-import info.papdt.expresshelper.common.api.ACKDHelper;
+import info.papdt.express.helper.common.Settings;
+import info.papdt.express.helper.common.api.ACKDHelper;
 
 public class Utility {
 

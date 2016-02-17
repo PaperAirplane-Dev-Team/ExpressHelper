@@ -3,20 +3,28 @@
 
 	<color name="background_material_light">#ffeeeeee</color>
 
+	<color name="black_semi_transparent">#B2000000</color>
+
 	<color name="drawer_list_item_highlight">#ffffffff</color>
 	<color name="drawer_list_item_normal">#d0ffffff</color>
 
 	<color name="red_500">#F44336</color>
 
 	<color name="pink_300">#F06292</color>
+	<color name="pink_400">#EC407A</color>
 	<color name="pink_500">#E91E63</color>
 	<color name="pink_800">#AD1457</color>
+
+	<color name="deep_purple_300">#9575CD</color>
+	<color name="deep_purple_500">#673AB7</color>
 
 	<color name="indigo_400">#5C6BC0</color>
 	<color name="indigo_500">#3F51B5</color>
 	<color name="indigo_800">#283593</color>
 
-	<color name="blue_500">#2196F3</color>
+	<color name="blue_400">#42A5F5</color>
+	<color name="blue_600">#1E88E5</color>
+	<color name="blue_800">#1565C0</color>
 
 	<color name="teal_500">#009688</color>
 
@@ -28,7 +36,7 @@
 
 	<color name="brown_500">#795548</color>
 
-	<color name="status_header_color">@color/indigo_500</color>
+	<color name="status_header_color">@color/blue_600</color>
 
 	<array name="statusColor">
 		<item>@color/red_500</item>

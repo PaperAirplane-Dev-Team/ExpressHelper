@@ -1,8 +1,9 @@
-package info.papdt.expresshelper.common.model;
+package info.papdt.express.helper.common.model;
 
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -10,7 +11,10 @@ import java.util.Map;
 public class Item {
 
 	private String companyCode, mailNumber, name;
-	private String jsonData = null, lastJsonData = null;
+	@SerializedName("cache")
+	private String jsonData = null;
+	@SerializedName("lastCache")
+	private String lastJsonData = null;
 	private int lastStatus = Result.STATUS_OTHER;
 	public boolean shouldPush = true, needPush = false;
 
@@ -96,6 +100,7 @@ public class Item {
 
 	public static class Result {
 
+		/** 爱查快递数据格式 */
 		public int status, errCode, update, cache;
 		public String message, html, mailNo, expSpellName, expTextName, ord;
 		public ArrayList<Map<String, String>> data;

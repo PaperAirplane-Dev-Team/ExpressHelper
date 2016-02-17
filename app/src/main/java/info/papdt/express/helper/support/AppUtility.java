@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.util.Log;
 
-import info.papdt.expresshelper.common.Settings;
+import info.papdt.express.helper.common.Settings;
 
 public class AppUtility {
 

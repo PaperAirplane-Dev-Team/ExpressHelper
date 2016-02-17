@@ -15,8 +15,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 import info.papdt.express.helper.R;
 import info.papdt.express.helper.support.AppUtility;
-import info.papdt.expresshelper.common.Settings;
-import info.papdt.expresshelper.common.Utility;
+import info.papdt.express.helper.common.Settings;
 import info.papdt.express.helper.ui.SettingsActivity;
 
 public class SettingsMain extends PreferenceFragment implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {

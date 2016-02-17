@@ -16,10 +16,10 @@ import java.util.Calendar;
 
 import info.papdt.express.helper.R;
 import info.papdt.express.helper.ui.DetailsActivity;
-import info.papdt.expresshelper.common.Settings;
-import info.papdt.expresshelper.common.Utility;
-import info.papdt.expresshelper.common.model.Item;
-import info.papdt.expresshelper.common.model.ItemsKeeper;
+import info.papdt.express.helper.common.Settings;
+import info.papdt.express.helper.common.Utility;
+import info.papdt.express.helper.common.model.Item;
+import info.papdt.express.helper.common.model.ItemsKeeper;
 
 @SuppressWarnings("ALL")
 public class ReminderService extends IntentService {
@@ -114,6 +114,11 @@ public class ReminderService extends IntentService {
 		for (int i = 0; i < db.size(); i++) {
 			Item exp = db.getItem(i);
 			if (exp.getData().getTrueStatus() != Item.Result.STATUS_FAILED && !exp.needPush && exp.shouldPush) {
+				try {
+					if (exp.getLastData().data.size() == exp.getData().data.size()) continue;
+				} catch (NullPointerException e) {
+					// ignore it
+				}
 				if (exp.getLastStatus() == Item.Result.STATUS_DELIVERED) continue;
 				Notification n = produceNotifications(i, exp);
 				if (exp != null) {

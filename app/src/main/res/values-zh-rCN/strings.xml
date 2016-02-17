@@ -9,6 +9,9 @@
 	<string name="toast_pull_to_refresh_tips">你也可以通过下拉列表来刷新信息。</string>
 	<string name="action_add">添加快递</string>
 
+	<string name="fab_add_input">添加运单</string>
+	<string name="fab_add_scan">扫描条码</string>
+
 	<string name="title_settings">设置</string>
 
 	<string name="title_add_express">新增物流追踪</string>
@@ -180,5 +183,6 @@
 	<string name="notification_delivered">" 已签收。"</string>
 	<string name="notification_on_the_way">" 即将到达。"</string>
 	<string name="notification_new_message">" 有新动态。"</string>
+	<string name="action_settings">设置</string>
 
 </resources>

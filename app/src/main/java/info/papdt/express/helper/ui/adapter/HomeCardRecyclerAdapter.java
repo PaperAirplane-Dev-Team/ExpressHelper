@@ -2,7 +2,6 @@ package info.papdt.express.helper.ui.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +12,8 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 import info.papdt.express.helper.R;
 import info.papdt.express.helper.ui.common.MyRecyclerViewAdapter;
-import info.papdt.expresshelper.common.Settings;
-import info.papdt.expresshelper.common.model.Item;
-import info.papdt.expresshelper.common.model.ItemsKeeper;
+import info.papdt.express.helper.common.model.Item;
+import info.papdt.express.helper.common.model.ItemsKeeper;
 
 public class HomeCardRecyclerAdapter extends MyRecyclerViewAdapter<HomeCardRecyclerAdapter.ViewHolder> {
 
@@ -41,7 +39,7 @@ public class HomeCardRecyclerAdapter extends MyRecyclerViewAdapter<HomeCardRecyc
 	}
 
 	@Override
-	public void onBindViewHolder(ViewHolder holder, final int position) {
+	public void onBindViewHolder(ViewHolder holder, int position) {
 		super.onBindViewHolder(holder, position);
 
 		Item item = getItem(position);

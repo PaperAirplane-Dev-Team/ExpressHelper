@@ -18,10 +18,10 @@ import com.quinny898.library.persistentsearch.SearchBox;
 import java.util.ArrayList;
 
 import info.papdt.express.helper.R;
-import info.papdt.expresshelper.common.Utility;
+import info.papdt.express.helper.common.Utility;
 import info.papdt.express.helper.ui.adapter.CompanyListRecyclerAdapter;
 import info.papdt.express.helper.ui.common.MyRecyclerViewAdapter;
-import info.papdt.expresshelper.common.api.ACKDHelper;
+import info.papdt.express.helper.common.api.ACKDHelper;
 
 public class CompanySelectActivity extends AbsActivity {
 

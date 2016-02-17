@@ -1,19 +1,17 @@
 package info.papdt.express.helper.wearable.adapter;
 
-import android.graphics.Color;
 import android.support.wearable.view.WearableListView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.amulyakhare.textdrawable.TextDrawable;
-import com.amulyakhare.textdrawable.util.ColorGenerator;
+import info.papdt.express.helper.common.model.Item;
+import info.papdt.express.helper.common.model.ItemsKeeper;
+import info.papdt.express.helper.common.view.TextDrawable;
+import info.papdt.express.helper.common.view.util.ColorGenerator;
 
 import info.papdt.express.helper.R;
-import info.papdt.express.helper.wearable.support.Express;
-import info.papdt.express.helper.wearable.support.ItemsKeeper;
-import info.papdt.express.helper.wearable.support.Item.Result;
 
 public class HomeWearableListAdapter extends WearableListView.Adapter {
 
@@ -36,7 +34,7 @@ public class HomeWearableListAdapter extends WearableListView.Adapter {
 	public void onBindViewHolder(WearableListView.ViewHolder holder, int position) {
 		if (holder instanceof HomeWearableListAdapter.ViewHolder) {
 			HomeWearableListAdapter.ViewHolder mHolder = (HomeWearableListAdapter.ViewHolder) holder;
-			mHolder.express = mDatabase.getExpress(position);
+			mHolder.express = mDatabase.getItem(position);
 			mHolder.position = position;
 			mHolder.setUpViews();
 		}
@@ -52,7 +50,7 @@ public class HomeWearableListAdapter extends WearableListView.Adapter {
 		public ImageView mImageView;
 		public TextView mTitleView, mContentView;
 		public int position;
-		public Express express;
+		public Item express;
 
 		public ViewHolder(View itemView) {
 			super(itemView);

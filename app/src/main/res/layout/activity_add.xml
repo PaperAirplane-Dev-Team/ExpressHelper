@@ -68,8 +68,6 @@
 				android:layout_marginRight="16dp"
 				android:layout_marginBottom="16dp"
 				android:src="@drawable/ic_done_white_24dp"
-				app:fab_colorNormal="@color/pink_500"
-				app:fab_colorPressed="@color/pink_300"
 				android:layout_alignBottom="@+id/blank_for_action_button"
 				android:layout_alignRight="@+id/blank_for_action_button"/>
 

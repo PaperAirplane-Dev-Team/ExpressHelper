@@ -1,4 +1,4 @@
-package info.papdt.expresshelper.common;
+package info.papdt.express.helper.common;
 
 import android.util.Log;
 
@@ -9,7 +9,7 @@ import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 
-import info.papdt.expresshelper.common.model.Message;
+import info.papdt.express.helper.common.model.Message;
 
 public class HttpUtils {
 

@@ -1,4 +1,4 @@
-package info.papdt.expresshelper.common.api;
+package info.papdt.express.helper.common.api;
 
 import android.util.Log;
 
@@ -11,7 +11,7 @@ import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombi
 
 import java.util.ArrayList;
 
-import info.papdt.expresshelper.common.api.secret.ACKD;
+import info.papdt.express.helper.common.api.secret.ACKD;
 
 public class ACKDHelper {
 	

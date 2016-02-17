@@ -1,4 +1,4 @@
-package info.papdt.expresshelper.common.api.secret;
+package info.papdt.express.helper.common.api.secret;
 
 public class ACKD {
 

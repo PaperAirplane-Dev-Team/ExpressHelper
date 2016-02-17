@@ -48,6 +48,7 @@ dependencies {
     compile 'com.github.ksoichiro:android-observablescrollview:1.6.0'
 	compile 'com.google.android.support:wearable:+'
 	compile 'com.google.android.gms:play-services-wearable:+'
+	compile 'com.getbase:floatingactionbutton:1.10.1'
 	wearApp project(':wearable')
 	compile('com.github.afollestad.material-dialogs:core:0.8.5.0@aar') {
 		transitive = true

@@ -10,8 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import info.papdt.express.helper.R;
-import info.papdt.expresshelper.common.Settings;
-import info.papdt.expresshelper.common.Utility;
+import info.papdt.express.helper.common.Settings;
+import info.papdt.express.helper.common.Utility;
 import me.imid.swipebacklayout.lib.SwipeBackLayout;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
@@ -44,7 +44,7 @@ public abstract class AbsActivity extends SwipeBackActivity {
 				getWindow().setStatusBarColor(Color.TRANSPARENT);
 			}
 			if (mSets.getBoolean(Settings.KEY_NAVIGATION_TINT, true)) {
-				getWindow().setNavigationBarColor(getResources().getColor(R.color.indigo_800));
+				getWindow().setNavigationBarColor(getResources().getColor(R.color.blue_800));
 			}
 		}
 

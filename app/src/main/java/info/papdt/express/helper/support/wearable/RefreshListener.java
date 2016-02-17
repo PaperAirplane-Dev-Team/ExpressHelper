@@ -7,8 +7,6 @@ import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.DataMap;
@@ -20,7 +18,7 @@ import com.google.android.gms.wearable.WearableListenerService;
 
 import java.util.concurrent.TimeUnit;
 
-import info.papdt.expresshelper.common.model.ItemsKeeper;
+import info.papdt.express.helper.common.model.ItemsKeeper;
 
 public class RefreshListener extends WearableListenerService
 		implements GoogleApiClient.ConnectionCallbacks,

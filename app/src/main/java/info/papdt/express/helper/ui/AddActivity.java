@@ -3,8 +3,6 @@ package info.papdt.express.helper.ui;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.view.View;
@@ -20,13 +18,12 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import java.util.HashMap;
 
 import info.papdt.express.helper.R;
-import info.papdt.expresshelper.common.HttpUtils;
-import info.papdt.expresshelper.common.Settings;
-import info.papdt.expresshelper.common.Utility;
-import info.papdt.expresshelper.common.api.ACKDHelper;
-import info.papdt.expresshelper.common.model.Item;
-import info.papdt.expresshelper.common.model.ItemsKeeper;
-import info.papdt.expresshelper.common.model.Message;
+import info.papdt.express.helper.common.HttpUtils;
+import info.papdt.express.helper.common.Utility;
+import info.papdt.express.helper.common.api.ACKDHelper;
+import info.papdt.express.helper.common.model.Item;
+import info.papdt.express.helper.common.model.ItemsKeeper;
+import info.papdt.express.helper.common.model.Message;
 
 public class AddActivity extends AbsActivity {
 
@@ -40,8 +37,6 @@ public class AddActivity extends AbsActivity {
 	private int mNow = -1;
 
 	public static final String TAG = "AddActivity";
-
-	public static final String TRANSITION_NAME_FAB = "fab";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,9 +75,6 @@ public class AddActivity extends AbsActivity {
 			}
 		});
 
-		if (!mSets.getBoolean(Settings.KEY_DISABLE_ANIMATION, false)) {
-			ViewCompat.setTransitionName(mFAB, TRANSITION_NAME_FAB);
-		}
 	}
 
 	@Override
@@ -151,23 +143,10 @@ public class AddActivity extends AbsActivity {
 		finish();
 	}
 
-	public static void launch(AbsActivity mActivity, View fab) {
+	public static void launch(AbsActivity mActivity) {
 		Intent intent = new Intent(mActivity, AddActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-		if (!mActivity.mSets.getBoolean(Settings.KEY_DISABLE_ANIMATION, false)) {
-			ActivityOptionsCompat options =
-					ActivityOptionsCompat.makeSceneTransitionAnimation(
-							mActivity, fab, TRANSITION_NAME_FAB
-					);
-			ActivityCompat.startActivityForResult(
-					mActivity,
-					intent,
-					MainActivity.REQUEST_ADD,
-					options.toBundle()
-			);
-		} else {
-			mActivity.startActivityForResult(intent, MainActivity.REQUEST_ADD);
-		}
+		mActivity.startActivityForResult(intent, MainActivity.REQUEST_ADD);
 	}
 
 	private class PostApiTask extends AsyncTask<String, Void, String> {

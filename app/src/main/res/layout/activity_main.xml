@@ -1,11 +1,12 @@
 <FrameLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="info.papdt.express.helper.ui.MainActivity"
-    android:background="@color/background_material_light">
+	xmlns:tools="http://schemas.android.com/tools"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	xmlns:fab="http://schemas.android.com/apk/res-auto"
+	tools:context="info.papdt.express.helper.ui.MainActivity"
+	android:background="@color/background_material_light">
 
 	<LinearLayout
 		android:layout_width="match_parent"
@@ -52,20 +53,56 @@
 				android:id="@+id/pager"
 				app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-			<com.melnykov.fab.FloatingActionButton
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:id="@+id/fab"
-				android:layout_gravity="right|bottom"
-				android:layout_marginBottom="16dp"
-				android:layout_marginRight="16dp"
-				android:src="@drawable/ic_add_white_24dp"
-				app:fab_colorNormal="@color/indigo_500"
-				app:fab_colorPressed="@color/indigo_400"/>
-
 		</android.support.design.widget.CoordinatorLayout>
 
 	</LinearLayout>
+
+	<FrameLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:id="@+id/white_background"
+		android:clickable="true"
+		android:visibility="gone"
+		android:background="#dfffffff"/>
+
+	<com.getbase.floatingactionbutton.FloatingActionsMenu
+		android:id="@+id/fab"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="right|bottom"
+		fab:fab_addButtonColorNormal="?attr/fab_colorNormal"
+		fab:fab_addButtonColorPressed="?attr/fab_colorPressed"
+		fab:fab_addButtonPlusIconColor="@android:color/white"
+		fab:fab_addButtonStrokeVisible="false"
+		fab:fab_expandDirection="up"
+		fab:fab_labelStyle="@style/menu_labels_style"
+		android:layout_marginBottom="16dp"
+		android:layout_marginRight="16dp">
+
+		<com.getbase.floatingactionbutton.FloatingActionButton
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/fab_add"
+			fab:fab_colorNormal="@color/deep_purple_500"
+			fab:fab_colorPressed="@color/deep_purple_300"
+			fab:fab_size="mini"
+			fab:fab_title="@string/fab_add_input"/>
+
+		<com.getbase.floatingactionbutton.FloatingActionButton
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			fab:fab_colorNormal="@color/indigo_500"
+			fab:fab_colorPressed="@color/indigo_400"
+			android:id="@+id/fab_scan"
+			fab:fab_size="mini"
+			fab:fab_title="@string/fab_add_scan"/>
+
+		<com.getbase.floatingactionbutton.FloatingActionButton
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:visibility="gone"/>
+
+	</com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 	<FrameLayout
 		android:layout_width="match_parent"

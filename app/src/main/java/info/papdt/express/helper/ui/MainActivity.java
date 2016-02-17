@@ -9,7 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.design.widget.TabLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,13 +19,15 @@ import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.melnykov.fab.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.quinny898.library.persistentsearch.SearchBox;
 
 import java.io.IOException;
@@ -34,16 +36,16 @@ import java.util.ArrayList;
 import info.papdt.express.helper.R;
 import info.papdt.express.helper.support.CrashHandler;
 import info.papdt.express.helper.view.SlidingTabLayout;
-import info.papdt.expresshelper.common.Settings;
-import info.papdt.expresshelper.common.Utility;
+import info.papdt.express.helper.common.Settings;
+import info.papdt.express.helper.common.Utility;
 import info.papdt.express.helper.support.wearable.Constants;
 import info.papdt.express.helper.support.wearable.RefreshListener;
 import info.papdt.express.helper.ui.adapter.CompanyListRecyclerAdapter;
 import info.papdt.express.helper.ui.adapter.HomePagerAdapter;
 import info.papdt.express.helper.ui.common.MyRecyclerViewAdapter;
 import info.papdt.express.helper.ui.fragment.BaseHomeFragment;
-import info.papdt.expresshelper.common.api.ACKDHelper;
-import info.papdt.expresshelper.common.model.ItemsKeeper;
+import info.papdt.express.helper.common.api.ACKDHelper;
+import info.papdt.express.helper.common.model.ItemsKeeper;
 
 public class MainActivity extends AbsActivity {
 
@@ -52,10 +54,11 @@ public class MainActivity extends AbsActivity {
 	private SlidingTabLayout mTabLayout;
 	private ViewPager mPager;
 	private static HomePagerAdapter mPagerAdapter;
-	private FloatingActionButton mFAB;
+	private FloatingActionsMenu mFAB;
 
+	private CoordinatorLayout mMainLayout;
 	private SearchBox mSearchBox;
-	private View mCompanyListPage, mCompanyListPageBackground;
+	private View mCompanyListPage, mCompanyListPageBackground, mActionBackground;
 	private RecyclerView mCompanyList;
 	private CompanyListRecyclerAdapter mCompanyListAdapter;
 
@@ -125,6 +128,8 @@ public class MainActivity extends AbsActivity {
 		mActionBar = getSupportActionBar();
 		mActionBar.setDisplayHomeAsUpEnabled(false);
 
+		mMainLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
+
 		mSearchBox = (SearchBox) findViewById(R.id.searchBox);
 		mCompanyListPage = findViewById(R.id.company_list_page);
 		mCompanyListPageBackground = findViewById(R.id.company_list_page_background);
@@ -153,11 +158,64 @@ public class MainActivity extends AbsActivity {
 		});
 
 		/** Set up FloatingActionButton */
-		mFAB = (FloatingActionButton) findViewById(R.id.fab);
-		mFAB.setOnClickListener(new View.OnClickListener() {
+		mActionBackground = findViewById(R.id.white_background);
+		mActionBackground.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				mFAB.collapse();
+			}
+		});
+		mActionBackground.setTranslationY(4096f);
+		mActionBackground.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View view, MotionEvent motionEvent) {
+				Log.i("TAG", "onTouch");
+				return mFAB.isExpanded() ? view.onTouchEvent(motionEvent) : false;
+			}
+		});
+		mFAB = (FloatingActionsMenu) findViewById(R.id.fab);
+		mFAB.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
+			@Override
+			public void onMenuExpanded() {
+				mActionBackground.setVisibility(View.VISIBLE);
+				mActionBackground.setTranslationY(0f);
+				AlphaAnimation anim = new AlphaAnimation(0f, 1f);
+				anim.setFillEnabled(true);
+				anim.setDuration(200);
+				mActionBackground.startAnimation(anim);
+			}
+
+			@Override
+			public void onMenuCollapsed() {
+				AlphaAnimation anim = new AlphaAnimation(1f, 0f);
+				anim.setFillAfter(true);
+				anim.setDuration(200);
+				mActionBackground.startAnimation(anim);
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								mActionBackground.setTranslationY(4096f);
+								mActionBackground.setVisibility(View.GONE);
+							}
+						});
+					}
+				}, 200);
+			}
+		});
+		findViewById(R.id.fab_add).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				AddActivity.launch(MainActivity.this, mFAB);
+				mFAB.collapse();
+				AddActivity.launch(MainActivity.this);
+			}
+		});
+		findViewById(R.id.fab_scan).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mFAB.collapse();
 			}
 		});
 	}
@@ -240,6 +298,10 @@ public class MainActivity extends AbsActivity {
 
 	@Override
 	public void onBackPressed() {
+		if (mFAB.isExpanded()) {
+			mFAB.collapse();
+			return;
+		}
 		if (mSearchBox.isSearchOpened()) {
 			mSearchBox.toggleSearch();
 		} else {

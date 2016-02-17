@@ -1,5 +1,6 @@
 package info.papdt.express.helper.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -11,7 +12,6 @@ import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +22,12 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import java.io.IOException;
 
 import info.papdt.express.helper.R;
-import info.papdt.expresshelper.common.Settings;
+import info.papdt.express.helper.common.Settings;
 import info.papdt.express.helper.ui.DetailsActivity;
 import info.papdt.express.helper.ui.MainActivity;
 import info.papdt.express.helper.ui.adapter.HomeCardRecyclerAdapter;
 import info.papdt.express.helper.ui.common.MyRecyclerViewAdapter;
-import info.papdt.expresshelper.common.model.ItemsKeeper;
+import info.papdt.express.helper.common.model.ItemsKeeper;
 
 public abstract class BaseHomeFragment extends Fragment {
 
@@ -61,12 +61,7 @@ public abstract class BaseHomeFragment extends Fragment {
 		Activity parentActivity = getActivity();
 		context = parentActivity.getApplicationContext();
 
-		refreshLayout.setProgressViewEndTarget(
-				true,
-				getResources().getDimensionPixelOffset(R.dimen.abc_action_bar_default_height_material) +
-						getResources().getDimensionPixelOffset(R.dimen.tab_height)
-		);
-		refreshLayout.setColorSchemeResources(R.color.blue_500);
+		refreshLayout.setColorSchemeResources(R.color.blue_600);
 		refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
@@ -115,8 +110,8 @@ public abstract class BaseHomeFragment extends Fragment {
 				HomeCardRecyclerAdapter adapter =
 						(HomeCardRecyclerAdapter) mRecyclerView.getAdapter();
 				int realPosition = mDB.findItem(
-						adapter.getItem(position - 1).getCompanyCode(),
-						adapter.getItem(position - 1).getMailNumber()
+						adapter.getItem(position).getCompanyCode(),
+						adapter.getItem(position).getMailNumber()
 				);
 				Intent intent = new Intent(getActivity(), DetailsActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
@@ -132,23 +127,28 @@ public abstract class BaseHomeFragment extends Fragment {
 		setUpAdapterListener(adapter);
 	}
 
+	@SuppressLint("HandlerLeak")
 	public Handler mHandler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
-			switch (msg.what) {
-				case FLAG_REFRESH_LIST:
-					if (!refreshLayout.isRefreshing()) {
-						refreshLayout.setRefreshing(true);
-					}
-					new RefreshTask().execute();
-					break;
-				case FLAG_REFRESH_ADAPTER_ONLY:
-					//mDB.init();
-					Log.i("tag", "b1");
-					//mRecyclerView.getAdapter().notifyDataSetChanged();
-					Log.i("tag", "b2");
-					break;
+			try {
+				switch (msg.what) {
+					case FLAG_REFRESH_LIST:
+						if (!refreshLayout.isRefreshing()) {
+							refreshLayout.setRefreshing(true);
+						}
+						new RefreshTask().execute();
+						break;
+					case FLAG_REFRESH_ADAPTER_ONLY:
+						// mDB.init();
+						if (mRecyclerView != null) {
+							mRecyclerView.getAdapter().notifyDataSetChanged();
+						}
+						break;
+				}
+			} catch (Exception e) {
+				// ignore it
 			}
 		}
 

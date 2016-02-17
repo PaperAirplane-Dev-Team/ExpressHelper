@@ -1,4 +1,4 @@
-package com.amulyakhare.textdrawable.util;
+package info.papdt.express.helper.common.view.util;
 
 import java.util.Arrays;
 import java.util.List;
