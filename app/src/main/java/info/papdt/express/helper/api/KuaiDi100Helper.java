@@ -9,30 +9,27 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
-import info.papdt.express.helper.api.secret.KuaiDi100;
 import info.papdt.express.helper.support.*;
 import org.json.*;
 import java.util.*;
 
 public class KuaiDi100Helper {
-	
+
+	// TODO: remove these id& secrets
 	public static String myid = "104262", mysecret = "2ac58b166085aefdc9c93a3a69010e87";
 	public static String xfid = "109066", xfsecret = "b1726be0ec9c6a1abe60e3d71ef72603";
-	public static String smid = KuaiDi100.SKINME_API_ID, smsecret = KuaiDi100.SKINME_API_SECRET;
+	public static String smid = "", smsecret = "";
 	public static String e0id = "110229", e0secret = "cedbdd77d5a5a737b09f42ec0ccbbbda";
-	// public static String smid = "", smsecret = "";
 
 	private static final String TAG = "KuaiDi100Helper";
 
+	// TODO: deprecate id, secret and encode
 	public static String getRequestUrl(String id, String secret, String com,
 									  String number, String encode) {
 		StringBuffer resultUrl = new StringBuffer();
-		resultUrl.append("http://api.ickd.cn/?id=" + (id != null ? id : xfid));
-		resultUrl.append("&secret=" + (secret != null ? secret : xfsecret));
-		resultUrl.append("&com=" + com);
-		resultUrl.append("&nu=" + number);
-		resultUrl.append("&encode=" + (encode != null ? encode : "gbk")
-						 + "&ord=asc");
+		resultUrl.append("http://www.kuaidi100.com/query?type=" + com);
+		resultUrl.append("&postid=" + number);
+		resultUrl.append("&valicode=");
 		Log.i(TAG, "Request URL:" + resultUrl);
 		return resultUrl.toString();
 	}
@@ -46,18 +43,14 @@ public class KuaiDi100Helper {
 			String json2;
 			Map<String, String> map;
 
-			result.status = person.getInt("status");
-			result.errCode = person.getInt("errCode");
+			result.status = person.getInt("state");
+			result.errCode = person.getInt("status");
 			result.message = person.getString("message");
-			result.html = person.getString("html");
-			result.mailNo = person.getString("mailNo");
-			result.expSpellName = person.getString("expSpellName");
-			result.expTextName = person.getString("expTextName");
-			result.update = person.getInt("update");
-			result.cache = person.getInt("cache");
-			result.ord = person.getString("ord");
+			result.mailNo = person.getString("nu");
+			result.expSpellName = person.getString("com");
+			result.expTextName = person.getString("com"); //TODO: use Chinese name of Express Company
 
-			for (int i = 0; i < array.length(); i++) {
+			for (int i = array.length() - 1; i >= 0; i--) {
 				map = new HashMap<>();
 				json2 = array.get(i).toString();
 				JSONTokener jsonParser2 = new JSONTokener(json2);

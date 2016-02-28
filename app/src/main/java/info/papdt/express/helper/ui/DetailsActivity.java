@@ -345,7 +345,7 @@ public class DetailsActivity extends AbsActivity {
 	}
 
 	private void setUpListView() {
-		if (cache.errCode != 0){
+		if (cache.errCode != 200){
 			addDetailsItem(getString(R.string.item_errorcode), getResources().getStringArray(R.array.errCode)[cache.errCode]);
 			addDetailsItem(getString(R.string.item_errormessage), cache.message);
 		}
