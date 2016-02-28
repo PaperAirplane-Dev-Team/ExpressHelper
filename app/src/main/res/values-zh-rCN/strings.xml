@@ -179,5 +179,6 @@
 	<string name="notification_delivered">" 已签收。"</string>
 	<string name="notification_on_the_way">" 即将到达。"</string>
 	<string name="notification_new_message">" 有新动态。"</string>
+	<string name="action_settings">设置</string>
 
 </resources>
