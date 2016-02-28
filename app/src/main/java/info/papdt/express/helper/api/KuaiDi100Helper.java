@@ -121,13 +121,13 @@ public class KuaiDi100Helper {
 		
 		static {
 			info = new ArrayList<>();
-			info.add(new Company("顺丰速递（中文结果）", "shunfeng", null, null));
-			info.add(new Company("中通速递", "zhongtong", null, null));
-			info.add(new Company("圆通速递", "yuantong", null, null));
-			info.add(new Company("申通", "shentong", null, null));
-			info.add(new Company("韵达快运", "yunda", null, null));
-			info.add(new Company("百世汇通", "huitongkuaidi", null, null));
-			info.add(new Company("EMS(中文结果)", "ems", null, null));
+			info.add(new Company("顺丰速递（中文结果）", "shunfeng", "95338", "http://www.sf-express.com/"));
+			info.add(new Company("中通速递", "zhongtong", "95311", "http://www.zto.cn/"));
+			info.add(new Company("圆通速递", "yuantong", "95554", "http://www.ytoexpress.com/"));
+			info.add(new Company("申通", "shentong", "95543", "http://www.sto.cn/"));
+			info.add(new Company("韵达快运", "yunda", "95546", "http://www.yundaex.com/"));
+			info.add(new Company("百世汇通", "huitongkuaidi", "4009 565656", "http://www.800bestex.com/"));
+			info.add(new Company("EMS(中文结果)", "ems", "11183", "http://www.ems.com.cn/"));
 
 			info.add(new Company("澳大利亚邮政(英文结果）", "auspost", null, null));
 			info.add(new Company("AAE", "aae", null, null));
