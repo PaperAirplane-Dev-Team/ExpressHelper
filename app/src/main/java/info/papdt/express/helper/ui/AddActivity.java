@@ -110,6 +110,7 @@ public class AddActivity extends AbsActivity {
 	}
 
 	private void postData() {
+		mEditTextSerial.setText(mEditTextSerial.getText().toString().trim());
 		if (TextUtils.isEmpty(mEditTextSerial.getText())) {
 			Toast.makeText(
 					getApplicationContext(),
