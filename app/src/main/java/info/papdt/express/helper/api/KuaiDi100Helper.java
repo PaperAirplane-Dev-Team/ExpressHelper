@@ -48,7 +48,7 @@ public class KuaiDi100Helper {
 			result.message = person.getString("message");
 			result.mailNo = person.getString("nu");
 			result.expSpellName = person.getString("com");
-			result.expTextName = person.getString("com"); //TODO: use Chinese name of Express Company
+			result.expTextName = CompanyInfo.info.get((CompanyInfo.findCompanyByCode(person.getString("com")))).name;
 
 			for (int i = array.length() - 1; i >= 0; i--) {
 				map = new HashMap<>();
