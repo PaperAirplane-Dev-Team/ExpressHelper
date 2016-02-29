@@ -78,6 +78,7 @@ public class AddActivity extends AbsActivity {
 			public void onClick(View v) {
 				mEditTextName.clearFocus();
 				mEditTextSerial.clearFocus();
+				mEditTextSerial.setText(mEditTextSerial.getText().toString().trim());
 				CompanySelectActivity.launchActivity(AddActivity.this);
 			}
 		});
@@ -259,6 +260,10 @@ public class AddActivity extends AbsActivity {
 			receiveData(result, name);
 		}
 
+	}
+
+	public String getExpressNumber(){
+		return this.mEditTextSerial.getText().toString();
 	}
 
 }

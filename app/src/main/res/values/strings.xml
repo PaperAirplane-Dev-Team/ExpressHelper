@@ -48,12 +48,13 @@
     <string name="action_should_push">Push message</string>
 
     <string-array name="status">
-        <item>Failed</item>
         <item>Normal</item>
-        <item>On the way</item>
+        <item>Pending</item>
+        <item>Failed</item>
         <item>Delivered</item>
-        <item>Returned</item>
-        <item>Other problem</item>
+        <item>Rejected</item>
+        <item>Delivering</item>
+        <item>Rejecting</item>
     </string-array>
     <string-array name="errCode">
         <item>No error</item>

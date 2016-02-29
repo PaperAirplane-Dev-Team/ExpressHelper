@@ -40,12 +40,13 @@
 	<string name="action_should_push">推送消息</string>
 
 	<string-array name="status">
-		<item>失败</item>
 		<item>正常</item>
-		<item>正在派送</item>
+		<item>准备中</item>
+		<item>失败</item>
 		<item>已签收</item>
-		<item>退回</item>
-		<item>其它问题</item>
+		<item>已退回</item>
+		<item>配送中</item>
+		<item>退回中</item>
 	</string-array>
 
 	<string-array name="errCode">

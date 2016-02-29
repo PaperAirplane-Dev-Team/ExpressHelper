@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -15,10 +16,16 @@ import android.widget.Toast;
 import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.quinny898.library.persistentsearch.SearchBox;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 import java.util.ArrayList;
 
 import info.papdt.express.helper.R;
 import info.papdt.express.helper.api.KuaiDi100Helper;
+import info.papdt.express.helper.support.HttpUtils;
 import info.papdt.express.helper.support.Utility;
 import info.papdt.express.helper.ui.adapter.CompanyListRecyclerAdapter;
 import info.papdt.express.helper.ui.common.MyRecyclerViewAdapter;
@@ -28,6 +35,7 @@ public class CompanySelectActivity extends AbsActivity {
 	private SearchBox mSearchBox;
 	private ObservableRecyclerView mRecyclerView;
 	private CompanyListRecyclerAdapter mCompanyListAdapter;
+	private AddActivity _mActivity;
 
 	public static final int REQUEST_CODE_SELECT = 0x100, RESULT_SELECTED = 0x100;
 
@@ -111,9 +119,10 @@ public class CompanySelectActivity extends AbsActivity {
 		return super.onCreateOptionsMenu(menu);
 	}
 
-	public static void launchActivity(Activity mActivity) {
+	public static void launchActivity(AddActivity mActivity) {
 		Intent intent = new Intent(mActivity, CompanySelectActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+		intent.putExtra("express_number",mActivity.getExpressNumber());
 		mActivity.startActivityForResult(intent, REQUEST_CODE_SELECT);
 	}
 
@@ -124,7 +133,45 @@ public class CompanySelectActivity extends AbsActivity {
 			if (params.length > 0) {
 				return KuaiDi100Helper.searchCompany(params [0]);
 			} else {
-				return KuaiDi100Helper.CompanyInfo.info;
+				try {
+					ArrayList<KuaiDi100Helper.CompanyInfo.Company> companies = new ArrayList<>();
+					Bundle extras = getIntent().getExtras();
+					if (extras != null) {
+						String number = extras.getString("express_number");
+						String[] result = new String[1];
+						int resultCode = HttpUtils.post(KuaiDi100Helper.getDetectUrl(number), result);
+						Log.d("debug:coderfox", Integer.toString(resultCode));
+						switch (resultCode) {
+							case HttpUtils.CODE_OKAY: {
+								JSONObject jsonObj = new JSONObject(result[0]);
+								JSONArray auto = jsonObj.getJSONArray("auto");
+								for(int i=0;i<auto.length();i++) {
+									String json2 = auto.getString(i);
+									JSONTokener jsonParser2 = new JSONTokener(json2);
+									JSONObject auto2 = (JSONObject) jsonParser2.nextValue();
+									try {
+										companies.add(KuaiDi100Helper.CompanyInfo.info.get(
+												KuaiDi100Helper.CompanyInfo.findCompanyByCode(
+														auto2.getString("comCode"))));
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+								}
+								return companies;
+							}
+							default:
+								return KuaiDi100Helper.CompanyInfo.info;
+						}
+					} else {
+						return KuaiDi100Helper.CompanyInfo.info;
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+					return KuaiDi100Helper.CompanyInfo.info;
+				} catch (Exception e) {
+					e.printStackTrace();
+					return KuaiDi100Helper.CompanyInfo.info;
+				}
 			}
 		}
 

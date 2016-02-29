@@ -33,6 +33,10 @@ public class KuaiDi100Helper {
 		Log.i(TAG, "Request URL:" + resultUrl);
 		return resultUrl.toString();
 	}
+
+	public static String getDetectUrl(String number){
+		return "http://www.kuaidi100.com/autonumber/autoComNum?text=" + number;
+	}
 	
 	public static ExpressResult buildDataFromResultStr(String jsonStr) {
 		ExpressResult result = new ExpressResult();
