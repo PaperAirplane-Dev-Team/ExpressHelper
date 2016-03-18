@@ -110,12 +110,9 @@ public class ExpressHelper {
 	private static String getRequestUrl(String id, String secret, String com,
 	                                   String number, String encode) {
 		StringBuffer resultUrl = new StringBuffer();
-		resultUrl.append("http://api.ickd.cn/?id=" + (id != null ? id : myid));
-		resultUrl.append("&secret=" + (secret != null ? secret : mysecret));
-		resultUrl.append("&com=" + com);
-		resultUrl.append("&nu=" + number);
-		resultUrl.append("&encode=" + (encode != null ? encode : "gbk")
-				+ "&ord=asc");
+		resultUrl.append("http://www.kuaidi100.com/query?type=" + com);
+		resultUrl.append("&postid=" + number);
+		resultUrl.append("&valicode=");
 		return resultUrl.toString();
 	}
 

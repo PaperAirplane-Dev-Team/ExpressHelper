@@ -38,12 +38,13 @@
 	<string name="action_should_push">推送通知</string>
 
 	<string-array name="status">
-		<item>失敗</item>
 		<item>正常</item>
-		<item>正在派送</item>
+		<item>準備中</item>
+		<item>失敗</item>
 		<item>已簽收</item>
-		<item>退回</item>
-		<item>其他問題</item>
+		<item>已退回</item>
+		<item>配送中</item>
+		<item>退回中</item>
 	</string-array>
 
 	<string-array name="errCode">
@@ -178,5 +179,6 @@
 	<string name="notification_delivered">" 已簽收。"</string>
 	<string name="notification_on_the_way">" 即將到達。"</string>
 	<string name="notification_new_message">" 有新動態。"</string>
+	<string name="action_settings">設定</string>
 
 </resources>

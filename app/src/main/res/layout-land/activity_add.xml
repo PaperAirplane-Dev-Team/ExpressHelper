@@ -97,6 +97,21 @@
 					app:primaryColor="?attr/colorPrimary"
 					android:textColorHint="@color/hint_foreground_material_light"/>
 
+				<com.rengwuxian.materialedittext.MaterialEditText
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:id="@+id/et_number"
+					android:hint="@string/hint_et_number"
+					android:singleLine="true"
+					android:layout_marginTop="4dp"
+					android:inputType="textEmailAddress"
+					app:floatingLabel="highlight"
+					app:iconLeft="@drawable/ic_assignment_black_24dp"
+					app:iconPadding="0dp"
+					app:baseColor="@color/abc_primary_text_material_light"
+					app:primaryColor="?attr/colorPrimary"
+					android:textColorHint="@color/hint_foreground_material_light"/>
+
 				<LinearLayout
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
@@ -135,21 +150,6 @@
 						android:alpha="0.75"/>
 
 				</LinearLayout>
-
-				<com.rengwuxian.materialedittext.MaterialEditText
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:id="@+id/et_number"
-					android:hint="@string/hint_et_number"
-					android:singleLine="true"
-					android:layout_marginTop="4dp"
-					android:inputType="textEmailAddress"
-					app:floatingLabel="highlight"
-					app:iconLeft="@drawable/ic_assignment_black_24dp"
-					app:iconPadding="0dp"
-					app:baseColor="@color/abc_primary_text_material_light"
-					app:primaryColor="?attr/colorPrimary"
-					android:textColorHint="@color/hint_foreground_material_light"/>
 
 				<CheckBox
 					android:layout_width="match_parent"
