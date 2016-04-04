@@ -32,7 +32,7 @@ import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import info.papdt.express.helper.R;
-import info.papdt.express.helper.common.api.ACKDHelper;
+import info.papdt.express.helper.common.api.KuaiDi100Helper;
 import info.papdt.express.helper.common.model.Item;
 import info.papdt.express.helper.common.model.ItemsKeeper;
 
@@ -87,9 +87,9 @@ public class DetailsActivity extends AbsActivity {
 			}
 		}.start();
 
-		int company_id = ACKDHelper.CompanyInfo.findCompanyByCode(express.getCompanyCode());
+		int company_id = KuaiDi100Helper.CompanyInfo.findCompanyByCode(express.getCompanyCode());
 		if (company_id != -1) {
-			phoneNumber = ACKDHelper.CompanyInfo.info.get(company_id).phone;
+			phoneNumber = KuaiDi100Helper.CompanyInfo.info.get(company_id).phone;
 			hasPhoneNumber = phoneNumber != null && phoneNumber != "null" && !TextUtils.isEmpty(phoneNumber);
 		}
 
@@ -342,7 +342,7 @@ public class DetailsActivity extends AbsActivity {
 	}
 
 	private void setUpListView() {
-		if (cache.errCode != 0){
+		if (cache.errCode != 200){
 			addDetailsItem(getString(R.string.item_errorcode), getResources().getStringArray(R.array.errCode)[cache.errCode]);
 			addDetailsItem(getString(R.string.item_errormessage), cache.message);
 		}

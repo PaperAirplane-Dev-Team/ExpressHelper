@@ -42,12 +42,13 @@
 	<string name="list_error_cannot_get_latest_status">拉取最新資訊失敗。</string>
 
 	<string-array name="status">
-		<item>失敗</item>
 		<item>正常</item>
-		<item>正在派送</item>
+		<item>準備中</item>
+		<item>失敗</item>
 		<item>已簽收</item>
-		<item>退回</item>
-		<item>其他問題</item>
+		<item>已退回</item>
+		<item>配送中</item>
+		<item>退回中</item>
 	</string-array>
 
 	<string-array name="errCode">

@@ -44,7 +44,7 @@ import info.papdt.express.helper.ui.adapter.CompanyListRecyclerAdapter;
 import info.papdt.express.helper.ui.adapter.HomePagerAdapter;
 import info.papdt.express.helper.ui.common.MyRecyclerViewAdapter;
 import info.papdt.express.helper.ui.fragment.BaseHomeFragment;
-import info.papdt.express.helper.common.api.ACKDHelper;
+import info.papdt.express.helper.common.api.KuaiDi100Helper;
 import info.papdt.express.helper.common.model.ItemsKeeper;
 
 public class MainActivity extends AbsActivity {
@@ -409,19 +409,19 @@ public class MainActivity extends AbsActivity {
 		}
 	}
 
-	public class SearchCompanyTask extends AsyncTask<String, Void, ArrayList<ACKDHelper.CompanyInfo.Company>> {
+	public class SearchCompanyTask extends AsyncTask<String, Void, ArrayList<KuaiDi100Helper.CompanyInfo.Company>> {
 
 		@Override
-		protected ArrayList<ACKDHelper.CompanyInfo.Company> doInBackground(String... params) {
+		protected ArrayList<KuaiDi100Helper.CompanyInfo.Company> doInBackground(String... params) {
 			if (params.length > 0) {
-				return ACKDHelper.searchCompany(params [0]);
+				return KuaiDi100Helper.searchCompany(params [0]);
 			} else {
-				return ACKDHelper.CompanyInfo.info;
+				return KuaiDi100Helper.CompanyInfo.info;
 			}
 		}
 
 		@Override
-		protected void onPostExecute(ArrayList<ACKDHelper.CompanyInfo.Company> result) {
+		protected void onPostExecute(ArrayList<KuaiDi100Helper.CompanyInfo.Company> result) {
 			if (result != null) {
 				mCompanyListAdapter = new CompanyListRecyclerAdapter(result);
 				mCompanyList.setAdapter(mCompanyListAdapter);

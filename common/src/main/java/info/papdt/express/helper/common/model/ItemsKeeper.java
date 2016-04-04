@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 import info.papdt.express.helper.common.HttpUtils;
 import info.papdt.express.helper.common.Utility;
-import info.papdt.express.helper.common.api.ACKDHelper;
+import info.papdt.express.helper.common.api.KuaiDi100Helper;
 
 public class ItemsKeeper {
 
@@ -162,7 +162,7 @@ public class ItemsKeeper {
 		String secret = token.get("secret");
 
 		Message<String> msg = HttpUtils.getString(
-				ACKDHelper.getRequestUrl(
+				KuaiDi100Helper.getRequestUrl(
 						app_id,
 						secret,
 						companyCode,

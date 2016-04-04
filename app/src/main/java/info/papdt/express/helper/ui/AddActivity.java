@@ -20,7 +20,7 @@ import java.util.HashMap;
 import info.papdt.express.helper.R;
 import info.papdt.express.helper.common.HttpUtils;
 import info.papdt.express.helper.common.Utility;
-import info.papdt.express.helper.common.api.ACKDHelper;
+import info.papdt.express.helper.common.api.KuaiDi100Helper;
 import info.papdt.express.helper.common.model.Item;
 import info.papdt.express.helper.common.model.ItemsKeeper;
 import info.papdt.express.helper.common.model.Message;
@@ -71,6 +71,7 @@ public class AddActivity extends AbsActivity {
 			public void onClick(View v) {
 				mEditTextName.clearFocus();
 				mEditTextSerial.clearFocus();
+				mEditTextSerial.setText(mEditTextSerial.getText().toString().trim());
 				CompanySelectActivity.launchActivity(AddActivity.this);
 			}
 		});
@@ -82,7 +83,7 @@ public class AddActivity extends AbsActivity {
 		switch (requestCode) {
 			case CompanySelectActivity.REQUEST_CODE_SELECT:
 				if (resultCode == CompanySelectActivity.RESULT_SELECTED) {
-					mNow = ACKDHelper.CompanyInfo.findCompanyByCode(intent.getStringExtra("company_code"));
+					mNow = KuaiDi100Helper.CompanyInfo.findCompanyByCode(intent.getStringExtra("company_code"));
 					setCompanyNameText();
 				}
 				break;
@@ -96,10 +97,11 @@ public class AddActivity extends AbsActivity {
 	}
 
 	private void setCompanyNameText() {
-		mCompanyNameText.setText(ACKDHelper.CompanyInfo.names [mNow]);
+		mCompanyNameText.setText(KuaiDi100Helper.CompanyInfo.names [mNow]);
 	}
 
 	private void postData() {
+		mEditTextSerial.setText(mEditTextSerial.getText().toString().trim());
 		if (TextUtils.isEmpty(mEditTextSerial.getText())) {
 			Toast.makeText(
 					getApplicationContext(),
@@ -118,7 +120,7 @@ public class AddActivity extends AbsActivity {
 		}
 
 		new PostApiTask().execute(
-				ACKDHelper.CompanyInfo.info.get(mNow).code,
+				KuaiDi100Helper.CompanyInfo.info.get(mNow).code,
 				mEditTextSerial.getText().toString()
 		);
 	}
@@ -177,7 +179,7 @@ public class AddActivity extends AbsActivity {
 			String secret = token.get("secret");
 
 			Message<String> msg = HttpUtils.getString(
-					ACKDHelper.getRequestUrl(
+					KuaiDi100Helper.getRequestUrl(
 							app_id,
 							secret,
 							companyCode,
@@ -242,6 +244,10 @@ public class AddActivity extends AbsActivity {
 			receiveData(result, name);
 		}
 
+	}
+
+	public String getExpressNumber(){
+		return this.mEditTextSerial.getText().toString();
 	}
 
 }

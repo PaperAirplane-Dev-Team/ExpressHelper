@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import info.papdt.express.helper.common.Settings;
-import info.papdt.express.helper.common.api.ACKDHelper;
+import info.papdt.express.helper.common.api.KuaiDi100Helper;
 
 public class Utility {
 
@@ -83,20 +83,20 @@ public class Utility {
 		}
 		switch (choice) {
 			case 1:
-				secret = ACKDHelper.xfsecret;
-				app_id = ACKDHelper.xfid;
+				secret = KuaiDi100Helper.xfsecret;
+				app_id = KuaiDi100Helper.xfid;
 				break;
 			case 2:
-				secret = ACKDHelper.smsecret;
-				app_id = ACKDHelper.smid;
+				secret = KuaiDi100Helper.smsecret;
+				app_id = KuaiDi100Helper.smid;
 				break;
 			case 3:
-				secret = ACKDHelper.mysecret;
-				app_id = ACKDHelper.myid;
+				secret = KuaiDi100Helper.mysecret;
+				app_id = KuaiDi100Helper.myid;
 				break;
 			case 4:
-				secret = ACKDHelper.e0secret;
-				app_id = ACKDHelper.e0id;
+				secret = KuaiDi100Helper.e0secret;
+				app_id = KuaiDi100Helper.e0id;
 				break;
 			case 5:
 			default:

@@ -7,27 +7,35 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.quinny898.library.persistentsearch.SearchBox;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.util.ArrayList;
 
 import info.papdt.express.helper.R;
 import info.papdt.express.helper.common.Utility;
+import info.papdt.express.helper.common.api.KuaiDi100Helper;
+import info.papdt.express.helper.support.HttpUtils;
 import info.papdt.express.helper.ui.adapter.CompanyListRecyclerAdapter;
 import info.papdt.express.helper.ui.common.MyRecyclerViewAdapter;
-import info.papdt.express.helper.common.api.ACKDHelper;
 
 public class CompanySelectActivity extends AbsActivity {
 
 	private SearchBox mSearchBox;
-	private ObservableRecyclerView mRecyclerView;
+	private RecyclerView mRecyclerView;
 	private CompanyListRecyclerAdapter mCompanyListAdapter;
+	private AddActivity mActivity;
 
 	public static final int REQUEST_CODE_SELECT = 0x100, RESULT_SELECTED = 0x100;
 
@@ -95,7 +103,7 @@ public class CompanySelectActivity extends AbsActivity {
 
 	@Override
 	protected void setUpViews() {
-		mRecyclerView = (ObservableRecyclerView) findViewById(R.id.company_list);
+		mRecyclerView = (RecyclerView) findViewById(R.id.company_list);
 		mSearchBox = (SearchBox) findViewById(R.id.searchBox);
 
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -111,25 +119,64 @@ public class CompanySelectActivity extends AbsActivity {
 		return super.onCreateOptionsMenu(menu);
 	}
 
-	public static void launchActivity(Activity mActivity) {
+	public static void launchActivity(AddActivity mActivity) {
 		Intent intent = new Intent(mActivity, CompanySelectActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+		intent.putExtra("express_number",mActivity.getExpressNumber());
 		mActivity.startActivityForResult(intent, REQUEST_CODE_SELECT);
 	}
 
-	public class SearchCompanyTask extends AsyncTask<String, Void, ArrayList<ACKDHelper.CompanyInfo.Company>> {
+	public class SearchCompanyTask extends AsyncTask<String, Void, ArrayList<KuaiDi100Helper.CompanyInfo.Company>> {
 
 		@Override
-		protected ArrayList<ACKDHelper.CompanyInfo.Company> doInBackground(String... params) {
+		protected ArrayList<KuaiDi100Helper.CompanyInfo.Company> doInBackground(String... params) {
 			if (params.length > 0) {
-				return ACKDHelper.searchCompany(params [0]);
+				return KuaiDi100Helper.searchCompany(params [0]);
 			} else {
-				return ACKDHelper.CompanyInfo.info;
+				try {
+					ArrayList<KuaiDi100Helper.CompanyInfo.Company> companies = new ArrayList<>();
+					Bundle extras = getIntent().getExtras();
+					if (extras != null) {
+						String number = extras.getString("express_number");
+						String[] result = new String[1];
+						int resultCode = HttpUtils.post(KuaiDi100Helper.getDetectUrl(number), result);
+						Log.d("debug:coderfox", Integer.toString(resultCode));
+						switch (resultCode) {
+							case HttpUtils.CODE_OKAY: {
+								JSONObject jsonObj = new JSONObject(result[0]);
+								JSONArray auto = jsonObj.getJSONArray("auto");
+								for(int i=0;i<auto.length();i++) {
+									String json2 = auto.getString(i);
+									JSONTokener jsonParser2 = new JSONTokener(json2);
+									JSONObject auto2 = (JSONObject) jsonParser2.nextValue();
+									try {
+										companies.add(KuaiDi100Helper.CompanyInfo.info.get(
+												KuaiDi100Helper.CompanyInfo.findCompanyByCode(
+														auto2.getString("comCode"))));
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+								}
+								return companies;
+							}
+							default:
+								return KuaiDi100Helper.CompanyInfo.info;
+						}
+					} else {
+						return KuaiDi100Helper.CompanyInfo.info;
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+					return KuaiDi100Helper.CompanyInfo.info;
+				} catch (Exception e) {
+					e.printStackTrace();
+					return KuaiDi100Helper.CompanyInfo.info;
+				}
 			}
 		}
 
 		@Override
-		protected void onPostExecute(ArrayList<ACKDHelper.CompanyInfo.Company> result) {
+		protected void onPostExecute(ArrayList<KuaiDi100Helper.CompanyInfo.Company> result) {
 			if (result != null) {
 				mCompanyListAdapter = new CompanyListRecyclerAdapter(result);
 				mRecyclerView.setAdapter(mCompanyListAdapter);
@@ -145,19 +192,6 @@ public class CompanySelectActivity extends AbsActivity {
 			}
 		}
 
-	}
-
-	public void mic(View v) {
-		if (Utility.isApplicationAvailable(getApplicationContext(), "com.mokee.assist")) {
-			Intent LaunchIntent = getPackageManager().getLaunchIntentForPackage("com.mokee.assist");
-			startActivity(LaunchIntent);
-		} else {
-			Toast.makeText(
-					getApplicationContext(),
-					R.string.toast_mic_unsupported,
-					Toast.LENGTH_SHORT
-			).show();
-		}
 	}
 
 }

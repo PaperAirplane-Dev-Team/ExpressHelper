@@ -5,7 +5,7 @@ A Material Design App which can help you check the latest status of express pack
 
 一枚帮助你查询最新物流状态的 Material Design 应用。
 
-快递信息API由'爱查快递'提供，建议自行到 <http://api.ickd.cn/users> 申请Token以便调试，目前Token限制每天调用2000次。
+快递信息API由'快递100'提供，@coderfox 抓包得到，由此产生的法律问题开发者均不负责。<https://github.com/coderfox/YetAnotherExpressHelper>
 
 ### The logs of wearable edition 手表应用开发日志（然而并没有什么卵用）
 
