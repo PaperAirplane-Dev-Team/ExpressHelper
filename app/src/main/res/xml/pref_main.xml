@@ -4,9 +4,6 @@
 	<PreferenceCategory android:title="@string/category_ui">
 
 		<SwitchPreference android:key="swipe_back" android:title="@string/item_enable_swipe_back"/>
-		<SwitchPreference android:key="disable_animation"
-		                  android:title="@string/item_disable_animation"
-		                  android:summary="@string/item_disable_animation_desc"/>
 		<SwitchPreference android:key="navigation_tint"
 		                  android:title="@string/item_navigation_tint"
 		                  android:summary="@string/item_navigation_tint_desc"/>

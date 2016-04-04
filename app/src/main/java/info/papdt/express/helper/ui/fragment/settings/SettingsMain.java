@@ -34,7 +34,6 @@ public class SettingsMain extends PreferenceFragment implements Preference.OnPre
 		pref_weibo, pref_github, pref_token_custom;
 	private SwitchPreference pref_swipe_back;
 	private SwitchPreference pref_do_not_disturb;
-	private SwitchPreference pref_disable_animation;
 	private SwitchPreference pref_navigation_tint;
 	private MaterialListPreference pref_token_choose;
 	private MaterialListPreference pref_notification_interval;
@@ -61,7 +60,6 @@ public class SettingsMain extends PreferenceFragment implements Preference.OnPre
 		pref_swipe_back = (SwitchPreference) findPreference("swipe_back");
 		pref_notification_interval = (MaterialListPreference) findPreference("notification_interval");
 		pref_do_not_disturb = (SwitchPreference) findPreference("do_not_disturb");
-		pref_disable_animation = (SwitchPreference) findPreference("disable_animation");
 		pref_navigation_tint = (SwitchPreference) findPreference("navigation_tint");
 
 		String version = "Unknown";
@@ -76,7 +74,6 @@ public class SettingsMain extends PreferenceFragment implements Preference.OnPre
 		pref_token_custom.setDefaultValue(mSets.getInt(Settings.KEY_TOKEN_CHOOSE, 0));
 		pref_token_custom.setEnabled(mSets.getInt(Settings.KEY_TOKEN_CHOOSE, 0) == 2);
 		pref_do_not_disturb.setChecked(mSets.getBoolean(Settings.KEY_NOTIFICATION_DO_NOT_DISTURB, true));
-		pref_disable_animation.setChecked(mSets.getBoolean(Settings.KEY_DISABLE_ANIMATION, false));
 		if (Build.VERSION.SDK_INT < 21) {
 			pref_navigation_tint.setEnabled(false);
 			pref_navigation_tint.setChecked(false);
@@ -112,7 +109,6 @@ public class SettingsMain extends PreferenceFragment implements Preference.OnPre
 		pref_swipe_back.setOnPreferenceChangeListener(this);
 		pref_notification_interval.setOnPreferenceChangeListener(this);
 		pref_do_not_disturb.setOnPreferenceChangeListener(this);
-		pref_disable_animation.setOnPreferenceChangeListener(this);
 		pref_navigation_tint.setOnPreferenceChangeListener(this);
 	}
 
@@ -222,12 +218,6 @@ public class SettingsMain extends PreferenceFragment implements Preference.OnPre
 			Boolean b = (Boolean) newValue;
 			mSets.putBoolean(Settings.KEY_NOTIFICATION_DO_NOT_DISTURB, b);
 			pref_do_not_disturb.setChecked(b);
-			return true;
-		}
-		if (pref == pref_disable_animation) {
-			Boolean b = (Boolean) newValue;
-			mSets.putBoolean(Settings.KEY_DISABLE_ANIMATION, b);
-			pref_disable_animation.setChecked(b);
 			return true;
 		}
 		if (pref == pref_navigation_tint) {

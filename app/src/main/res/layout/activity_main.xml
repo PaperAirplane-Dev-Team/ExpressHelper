@@ -83,6 +83,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:id="@+id/fab_add"
+			fab:fab_icon="@drawable/ic_mode_edit_white_24dp"
 			fab:fab_colorNormal="@color/deep_purple_500"
 			fab:fab_colorPressed="@color/deep_purple_300"
 			fab:fab_size="mini"
@@ -91,9 +92,10 @@
 		<com.getbase.floatingactionbutton.FloatingActionButton
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:id="@+id/fab_scan"
+			fab:fab_icon="@drawable/ic_camera_white_24dp"
 			fab:fab_colorNormal="@color/indigo_500"
 			fab:fab_colorPressed="@color/indigo_400"
-			android:id="@+id/fab_scan"
 			fab:fab_size="mini"
 			fab:fab_title="@string/fab_add_scan"/>
 

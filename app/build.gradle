@@ -45,10 +45,10 @@ dependencies {
     compile 'com.melnykov:floatingactionbutton:1.1.+'
     compile 'com.rengwuxian.materialedittext:library:1.8.+'
     compile 'de.hdodenhof:circleimageview:1.2.+'
-    compile 'com.github.ksoichiro:android-observablescrollview:1.6.0'
 	compile 'com.google.android.support:wearable:+'
 	compile 'com.google.android.gms:play-services-wearable:+'
 	compile 'com.getbase:floatingactionbutton:1.10.1'
+	compile 'me.dm7.barcodescanner:zxing:1.8.4'
 	wearApp project(':wearable')
 	compile('com.github.afollestad.material-dialogs:core:0.8.5.0@aar') {
 		transitive = true
