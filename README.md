@@ -1,4 +1,8 @@
 # ExpressHelper
+
+This project is now maintained by fython and migrated to <https://github.com/fython/PackageTracker>.  
+This repoistry will no longer be updated.
+
 ## 快递助手（别称：水表助手）
 
 A Material Design App which can help you check the latest status of express package.
