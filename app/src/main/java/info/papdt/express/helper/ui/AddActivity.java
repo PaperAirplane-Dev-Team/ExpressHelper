@@ -18,7 +18,6 @@ import com.melnykov.fab.FloatingActionButton;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.HashMap;
-import java.util.Random;
 
 import info.papdt.express.helper.R;
 import info.papdt.express.helper.api.KuaiDi100Helper;
@@ -201,6 +200,8 @@ public class AddActivity extends AbsActivity {
 			HashMap<String, String> token = Utility.getAPIToken(getApplicationContext());
 			String app_id = token.get("id");
 			String secret = token.get("secret");
+
+			mailNumber = mailNumber.trim();
 
 			int resultCode = HttpUtils.get(KuaiDi100Helper.getRequestUrl(app_id, secret, companyCode, mailNumber, "utf8"), result);
 			switch (resultCode) {
